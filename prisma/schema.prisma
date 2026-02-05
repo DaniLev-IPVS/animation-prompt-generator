@@ -30,13 +30,15 @@ model User {
 }
 
 model UserSettings {
-  id                 String  @id @default(cuid())
-  userId             String  @unique
-  anthropicApiKey    String?
-  defaultStyle       String?
-  defaultDuration    Int?
-  defaultAudioType   String?
-  defaultAspectRatio String?
+  id                    String  @id @default(cuid())
+  userId                String  @unique
+  anthropicApiKey       String?
+  anthropicApiKeyBackup String?
+  geminiApiKey          String?
+  defaultStyle          String?
+  defaultDuration       Int?
+  defaultAudioType      String?
+  defaultAspectRatio    String?
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 }

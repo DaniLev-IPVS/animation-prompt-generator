@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { auth } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
 import { UserRole } from '@/types';
+import { encrypt } from '@/lib/encryption';
 
 // GET single user details (for super admin viewing another user's details and projects)
 export async function GET(
@@ -32,6 +33,8 @@ export async function GET(
         settings: {
           select: {
             anthropicApiKey: true,
+            anthropicApiKeyBackup: true,
+            geminiApiKey: true,
           },
         },
         projects: {
@@ -89,6 +92,8 @@ export async function GET(
       generationCount: user._count.history,
       totalTokensUsed: tokenStats._sum.tokensUsed || 0,
       hasApiKey: !!user.settings?.anthropicApiKey,
+      hasBackupApiKey: !!user.settings?.anthropicApiKeyBackup,
+      hasGeminiKey: !!user.settings?.geminiApiKey,
       projects: projectsWithStats,
     });
   } catch (error) {
@@ -119,7 +124,7 @@ export async function PATCH(
     }
 
     const body = await request.json();
-    const { role, anthropicApiKey } = body;
+    const { role, anthropicApiKey, anthropicApiKeyBackup, geminiApiKey } = body;
 
     // Handle role update
     if (role !== undefined) {
@@ -150,19 +155,61 @@ export async function PATCH(
       return NextResponse.json(user);
     }
 
-    // Handle API key update
+    // Handle API key updates
+    const updateData: Record<string, string | null> = {};
+
+    // Primary Anthropic key
     if (anthropicApiKey !== undefined) {
-      // Upsert the user settings with the new API key
-      await prisma.userSettings.upsert({
+      if (anthropicApiKey === null || anthropicApiKey === '') {
+        updateData.anthropicApiKey = null;
+      } else {
+        if (!anthropicApiKey.startsWith('sk-ant-')) {
+          return NextResponse.json({ error: 'Invalid Anthropic API key format' }, { status: 400 });
+        }
+        updateData.anthropicApiKey = encrypt(anthropicApiKey);
+      }
+    }
+
+    // Backup Anthropic key
+    if (anthropicApiKeyBackup !== undefined) {
+      if (anthropicApiKeyBackup === null || anthropicApiKeyBackup === '') {
+        updateData.anthropicApiKeyBackup = null;
+      } else {
+        if (!anthropicApiKeyBackup.startsWith('sk-ant-')) {
+          return NextResponse.json({ error: 'Invalid backup Anthropic API key format' }, { status: 400 });
+        }
+        updateData.anthropicApiKeyBackup = encrypt(anthropicApiKeyBackup);
+      }
+    }
+
+    // Gemini key
+    if (geminiApiKey !== undefined) {
+      if (geminiApiKey === null || geminiApiKey === '') {
+        updateData.geminiApiKey = null;
+      } else {
+        if (!geminiApiKey.startsWith('AIza')) {
+          return NextResponse.json({ error: 'Invalid Gemini API key format' }, { status: 400 });
+        }
+        updateData.geminiApiKey = encrypt(geminiApiKey);
+      }
+    }
+
+    if (Object.keys(updateData).length > 0) {
+      const settings = await prisma.userSettings.upsert({
         where: { userId: id },
-        update: { anthropicApiKey },
+        update: updateData,
         create: {
           userId: id,
-          anthropicApiKey,
+          ...updateData,
         },
       });
 
-      return NextResponse.json({ success: true, hasApiKey: !!anthropicApiKey });
+      return NextResponse.json({
+        success: true,
+        hasApiKey: !!settings.anthropicApiKey,
+        hasBackupApiKey: !!settings.anthropicApiKeyBackup,
+        hasGeminiKey: !!settings.geminiApiKey,
+      });
     }
 
     return NextResponse.json({ error: 'No valid update provided' }, { status: 400 });

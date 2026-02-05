@@ -1,15 +1,27 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { Key, Save, Loader2, Check, AlertCircle, Eye, EyeOff, Sun, Moon, Monitor } from 'lucide-react';
+import { Key, Save, Loader2, Check, AlertCircle, Eye, EyeOff, Sun, Moon, Monitor, Shield } from 'lucide-react';
 import { useTheme } from '@/contexts/ThemeContext';
 
 export default function SettingsPage() {
   const { theme, setTheme } = useTheme();
+  // Primary Anthropic key
   const [apiKey, setApiKey] = useState('');
   const [showApiKey, setShowApiKey] = useState(false);
   const [hasApiKey, setHasApiKey] = useState(false);
   const [apiKeyPreview, setApiKeyPreview] = useState<string | null>(null);
+  // Backup Anthropic key
+  const [backupApiKey, setBackupApiKey] = useState('');
+  const [showBackupApiKey, setShowBackupApiKey] = useState(false);
+  const [hasBackupApiKey, setHasBackupApiKey] = useState(false);
+  const [backupApiKeyPreview, setBackupApiKeyPreview] = useState<string | null>(null);
+  // Gemini key
+  const [geminiKey, setGeminiKey] = useState('');
+  const [showGeminiKey, setShowGeminiKey] = useState(false);
+  const [hasGeminiKey, setHasGeminiKey] = useState(false);
+  const [geminiKeyPreview, setGeminiKeyPreview] = useState<string | null>(null);
+  // Other settings
   const [defaultStyle, setDefaultStyle] = useState('');
   const [defaultDuration, setDefaultDuration] = useState('');
   const [defaultAudioType, setDefaultAudioType] = useState('auto');
@@ -29,6 +41,10 @@ export default function SettingsPage() {
         const data = await response.json();
         setHasApiKey(data.hasApiKey || false);
         setApiKeyPreview(data.apiKeyPreview || null);
+        setHasBackupApiKey(data.hasBackupApiKey || false);
+        setBackupApiKeyPreview(data.backupApiKeyPreview || null);
+        setHasGeminiKey(data.hasGeminiKey || false);
+        setGeminiKeyPreview(data.geminiKeyPreview || null);
         setDefaultStyle(data.defaultStyle || '');
         setDefaultDuration(data.defaultDuration?.toString() || '');
         setDefaultAudioType(data.defaultAudioType || 'auto');
@@ -51,6 +67,8 @@ export default function SettingsPage() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           anthropicApiKey: apiKey || undefined,
+          anthropicApiKeyBackup: backupApiKey || undefined,
+          geminiApiKey: geminiKey || undefined,
           defaultStyle: defaultStyle || null,
           defaultDuration: defaultDuration ? parseInt(defaultDuration) : null,
           defaultAudioType: defaultAudioType || null,
@@ -62,7 +80,13 @@ export default function SettingsPage() {
         const data = await response.json();
         setHasApiKey(data.hasApiKey || false);
         setApiKeyPreview(data.apiKeyPreview || null);
+        setHasBackupApiKey(data.hasBackupApiKey || false);
+        setBackupApiKeyPreview(data.backupApiKeyPreview || null);
+        setHasGeminiKey(data.hasGeminiKey || false);
+        setGeminiKeyPreview(data.geminiKeyPreview || null);
         setApiKey('');
+        setBackupApiKey('');
+        setGeminiKey('');
         setMessage({ type: 'success', text: 'Settings saved successfully!' });
       } else {
         const error = await response.json();
@@ -76,20 +100,34 @@ export default function SettingsPage() {
     }
   };
 
-  const removeApiKey = async () => {
+  const removeApiKey = async (keyType: 'primary' | 'backup' | 'gemini') => {
     setIsSaving(true);
     setMessage(null);
+
+    const keyMap = {
+      primary: 'anthropicApiKey',
+      backup: 'anthropicApiKeyBackup',
+      gemini: 'geminiApiKey',
+    };
 
     try {
       const response = await fetch('/api/settings', {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ anthropicApiKey: null }),
+        body: JSON.stringify({ [keyMap[keyType]]: null }),
       });
 
       if (response.ok) {
-        setHasApiKey(false);
-        setApiKeyPreview(null);
+        if (keyType === 'primary') {
+          setHasApiKey(false);
+          setApiKeyPreview(null);
+        } else if (keyType === 'backup') {
+          setHasBackupApiKey(false);
+          setBackupApiKeyPreview(null);
+        } else {
+          setHasGeminiKey(false);
+          setGeminiKeyPreview(null);
+        }
         setMessage({ type: 'success', text: 'API key removed' });
       }
     } catch (error) {
@@ -175,7 +213,7 @@ export default function SettingsPage() {
         </div>
       </div>
 
-      {/* API Key Section */}
+      {/* Primary Anthropic API Key Section */}
       <div className="bg-theme-secondary rounded-xl border border-theme-primary p-6 mb-6">
         <div className="flex items-center gap-3 mb-4">
           <div className="w-10 h-10 bg-purple-500/20 rounded-lg flex items-center justify-center">
@@ -183,7 +221,7 @@ export default function SettingsPage() {
           </div>
           <div>
             <h2 className="text-lg font-semibold text-theme-primary">Anthropic API Key</h2>
-            <p className="text-sm text-theme-muted">Required to generate prompts</p>
+            <p className="text-sm text-theme-muted">Primary key for AI generations</p>
           </div>
         </div>
 
@@ -196,7 +234,7 @@ export default function SettingsPage() {
                 <p className="text-xs text-green-400/70">{apiKeyPreview}</p>
               </div>
               <button
-                onClick={removeApiKey}
+                onClick={() => removeApiKey('primary')}
                 disabled={isSaving}
                 className="px-3 py-1.5 text-sm text-red-400 hover:bg-red-500/10 rounded-lg transition-colors"
               >
@@ -272,6 +310,172 @@ export default function SettingsPage() {
                 Your API key is encrypted and stored securely. It is never exposed to the browser.
               </p>
             </div>
+          </div>
+        )}
+      </div>
+
+      {/* Backup Anthropic API Key Section */}
+      <div className="bg-theme-secondary rounded-xl border border-theme-primary p-6 mb-6">
+        <div className="flex items-center gap-3 mb-4">
+          <div className="w-10 h-10 bg-blue-500/20 rounded-lg flex items-center justify-center">
+            <Shield className="w-5 h-5 text-blue-400" />
+          </div>
+          <div>
+            <h2 className="text-lg font-semibold text-theme-primary">Backup Anthropic API Key</h2>
+            <p className="text-sm text-theme-muted">Fallback key if primary fails</p>
+          </div>
+        </div>
+
+        {hasBackupApiKey ? (
+          <div className="space-y-4">
+            <div className="flex items-center gap-3 p-3 bg-green-500/10 border border-green-500/30 rounded-lg">
+              <Check className="w-5 h-5 text-green-400" />
+              <div className="flex-1">
+                <p className="text-sm font-medium text-green-400">Backup Key Connected</p>
+                <p className="text-xs text-green-400/70">{backupApiKeyPreview}</p>
+              </div>
+              <button
+                onClick={() => removeApiKey('backup')}
+                disabled={isSaving}
+                className="px-3 py-1.5 text-sm text-red-400 hover:bg-red-500/10 rounded-lg transition-colors"
+              >
+                Remove
+              </button>
+            </div>
+
+            <div className="border-t border-theme-primary pt-4">
+              <label className="block text-sm font-medium text-theme-secondary mb-2">
+                Update Backup Key
+              </label>
+              <div className="relative">
+                <input
+                  type={showBackupApiKey ? 'text' : 'password'}
+                  value={backupApiKey}
+                  onChange={(e) => setBackupApiKey(e.target.value)}
+                  placeholder="sk-ant-api03-..."
+                  className="w-full px-4 py-3 bg-theme-input border border-theme-primary rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none pr-12 text-theme-primary placeholder-theme-muted"
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowBackupApiKey(!showBackupApiKey)}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-theme-muted hover:text-theme-secondary"
+                >
+                  {showBackupApiKey ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+                </button>
+              </div>
+            </div>
+          </div>
+        ) : (
+          <div>
+            <label className="block text-sm font-medium text-theme-secondary mb-2">
+              Add Backup API Key (Optional)
+            </label>
+            <div className="relative">
+              <input
+                type={showBackupApiKey ? 'text' : 'password'}
+                value={backupApiKey}
+                onChange={(e) => setBackupApiKey(e.target.value)}
+                placeholder="sk-ant-api03-..."
+                className="w-full px-4 py-3 bg-theme-input border border-theme-primary rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none pr-12 text-theme-primary placeholder-theme-muted"
+              />
+              <button
+                type="button"
+                onClick={() => setShowBackupApiKey(!showBackupApiKey)}
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-theme-muted hover:text-theme-secondary"
+              >
+                {showBackupApiKey ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+              </button>
+            </div>
+            <p className="mt-2 text-xs text-theme-muted">
+              Add a backup key to use if your primary key hits rate limits or fails.
+            </p>
+          </div>
+        )}
+      </div>
+
+      {/* Gemini API Key Section */}
+      <div className="bg-theme-secondary rounded-xl border border-theme-primary p-6 mb-6">
+        <div className="flex items-center gap-3 mb-4">
+          <div className="w-10 h-10 bg-amber-500/20 rounded-lg flex items-center justify-center">
+            <Key className="w-5 h-5 text-amber-400" />
+          </div>
+          <div>
+            <h2 className="text-lg font-semibold text-theme-primary">Google Gemini API Key</h2>
+            <p className="text-sm text-theme-muted">For Gemini model access</p>
+          </div>
+        </div>
+
+        {hasGeminiKey ? (
+          <div className="space-y-4">
+            <div className="flex items-center gap-3 p-3 bg-green-500/10 border border-green-500/30 rounded-lg">
+              <Check className="w-5 h-5 text-green-400" />
+              <div className="flex-1">
+                <p className="text-sm font-medium text-green-400">Gemini Key Connected</p>
+                <p className="text-xs text-green-400/70">{geminiKeyPreview}</p>
+              </div>
+              <button
+                onClick={() => removeApiKey('gemini')}
+                disabled={isSaving}
+                className="px-3 py-1.5 text-sm text-red-400 hover:bg-red-500/10 rounded-lg transition-colors"
+              >
+                Remove
+              </button>
+            </div>
+
+            <div className="border-t border-theme-primary pt-4">
+              <label className="block text-sm font-medium text-theme-secondary mb-2">
+                Update Gemini Key
+              </label>
+              <div className="relative">
+                <input
+                  type={showGeminiKey ? 'text' : 'password'}
+                  value={geminiKey}
+                  onChange={(e) => setGeminiKey(e.target.value)}
+                  placeholder="AIza..."
+                  className="w-full px-4 py-3 bg-theme-input border border-theme-primary rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-transparent outline-none pr-12 text-theme-primary placeholder-theme-muted"
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowGeminiKey(!showGeminiKey)}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-theme-muted hover:text-theme-secondary"
+                >
+                  {showGeminiKey ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+                </button>
+              </div>
+            </div>
+          </div>
+        ) : (
+          <div>
+            <label className="block text-sm font-medium text-theme-secondary mb-2">
+              Add Gemini API Key (Optional)
+            </label>
+            <div className="relative">
+              <input
+                type={showGeminiKey ? 'text' : 'password'}
+                value={geminiKey}
+                onChange={(e) => setGeminiKey(e.target.value)}
+                placeholder="AIza..."
+                className="w-full px-4 py-3 bg-theme-input border border-theme-primary rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-transparent outline-none pr-12 text-theme-primary placeholder-theme-muted"
+              />
+              <button
+                type="button"
+                onClick={() => setShowGeminiKey(!showGeminiKey)}
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-theme-muted hover:text-theme-secondary"
+              >
+                {showGeminiKey ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+              </button>
+            </div>
+            <p className="mt-2 text-xs text-theme-muted">
+              Get your Gemini API key at{' '}
+              <a
+                href="https://aistudio.google.com/apikey"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-amber-400 underline hover:text-amber-300"
+              >
+                aistudio.google.com
+              </a>
+            </p>
           </div>
         )}
       </div>

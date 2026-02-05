@@ -18,6 +18,8 @@ export async function GET() {
     if (!settings) {
       return NextResponse.json({
         hasApiKey: false,
+        hasBackupApiKey: false,
+        hasGeminiKey: false,
         defaultStyle: null,
         defaultDuration: null,
         defaultAudioType: null,
@@ -29,6 +31,14 @@ export async function GET() {
       hasApiKey: !!settings.anthropicApiKey,
       apiKeyPreview: settings.anthropicApiKey
         ? `sk-ant-...${decrypt(settings.anthropicApiKey).slice(-4)}`
+        : null,
+      hasBackupApiKey: !!settings.anthropicApiKeyBackup,
+      backupApiKeyPreview: settings.anthropicApiKeyBackup
+        ? `sk-ant-...${decrypt(settings.anthropicApiKeyBackup).slice(-4)}`
+        : null,
+      hasGeminiKey: !!settings.geminiApiKey,
+      geminiKeyPreview: settings.geminiApiKey
+        ? `AIza...${decrypt(settings.geminiApiKey).slice(-4)}`
         : null,
       defaultStyle: settings.defaultStyle,
       defaultDuration: settings.defaultDuration,
@@ -55,6 +65,8 @@ export async function PUT(request: NextRequest) {
     const body = await request.json();
     const {
       anthropicApiKey,
+      anthropicApiKeyBackup,
+      geminiApiKey,
       defaultStyle,
       defaultDuration,
       defaultAudioType,
@@ -63,18 +75,48 @@ export async function PUT(request: NextRequest) {
 
     const updateData: Record<string, unknown> = {};
 
+    // Handle primary Anthropic API key
     if (anthropicApiKey !== undefined) {
       if (anthropicApiKey === null || anthropicApiKey === '') {
         updateData.anthropicApiKey = null;
       } else {
-        // Validate API key format
         if (!anthropicApiKey.startsWith('sk-ant-')) {
           return NextResponse.json(
-            { error: 'Invalid API key format' },
+            { error: 'Invalid Anthropic API key format' },
             { status: 400 }
           );
         }
         updateData.anthropicApiKey = encrypt(anthropicApiKey);
+      }
+    }
+
+    // Handle backup Anthropic API key
+    if (anthropicApiKeyBackup !== undefined) {
+      if (anthropicApiKeyBackup === null || anthropicApiKeyBackup === '') {
+        updateData.anthropicApiKeyBackup = null;
+      } else {
+        if (!anthropicApiKeyBackup.startsWith('sk-ant-')) {
+          return NextResponse.json(
+            { error: 'Invalid backup Anthropic API key format' },
+            { status: 400 }
+          );
+        }
+        updateData.anthropicApiKeyBackup = encrypt(anthropicApiKeyBackup);
+      }
+    }
+
+    // Handle Gemini API key
+    if (geminiApiKey !== undefined) {
+      if (geminiApiKey === null || geminiApiKey === '') {
+        updateData.geminiApiKey = null;
+      } else {
+        if (!geminiApiKey.startsWith('AIza')) {
+          return NextResponse.json(
+            { error: 'Invalid Gemini API key format' },
+            { status: 400 }
+          );
+        }
+        updateData.geminiApiKey = encrypt(geminiApiKey);
       }
     }
 
@@ -96,6 +138,14 @@ export async function PUT(request: NextRequest) {
       hasApiKey: !!settings.anthropicApiKey,
       apiKeyPreview: settings.anthropicApiKey
         ? `sk-ant-...${decrypt(settings.anthropicApiKey).slice(-4)}`
+        : null,
+      hasBackupApiKey: !!settings.anthropicApiKeyBackup,
+      backupApiKeyPreview: settings.anthropicApiKeyBackup
+        ? `sk-ant-...${decrypt(settings.anthropicApiKeyBackup).slice(-4)}`
+        : null,
+      hasGeminiKey: !!settings.geminiApiKey,
+      geminiKeyPreview: settings.geminiApiKey
+        ? `AIza...${decrypt(settings.geminiApiKey).slice(-4)}`
         : null,
       defaultStyle: settings.defaultStyle,
       defaultDuration: settings.defaultDuration,
