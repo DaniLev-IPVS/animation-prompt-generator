@@ -1,0 +1,82 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --background: #ffffff;
+  --foreground: #000000;
+}
+
+body {
+  color: var(--foreground);
+  background: var(--background);
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+/* Override all gray text classes to black */
+.text-gray-400,
+.text-gray-500,
+.text-gray-600,
+.text-gray-700 {
+  color: #000000 !important;
+}
+
+/* Keep specific semantic colors */
+.text-purple-600,
+.text-purple-700,
+.text-purple-800,
+.text-purple-900,
+.text-blue-600,
+.text-blue-700,
+.text-blue-800,
+.text-blue-900,
+.text-green-600,
+.text-green-700,
+.text-green-800,
+.text-green-900,
+.text-red-600,
+.text-red-700,
+.text-orange-700,
+.text-amber-800,
+.text-indigo-700,
+.text-indigo-800,
+.text-pink-700 {
+  color: inherit;
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #c1c1c1;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #a1a1a1;
+}
+
+/* Animation for loading spinner */
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.animate-spin {
+  animation: spin 1s linear infinite;
+}
