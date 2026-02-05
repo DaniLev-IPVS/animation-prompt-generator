@@ -1,9 +1,9 @@
 import { redirect } from 'next/navigation';
 import Link from 'next/link';
+import Image from 'next/image';
 import { auth, signOut } from '@/lib/auth';
 import {
   Sparkles,
-  FolderOpen,
   Settings,
   History,
   LogOut,
@@ -28,10 +28,22 @@ export default async function DashboardLayout({
         <div className="container mx-auto px-4">
           <div className="flex items-center justify-between h-16">
             <Link href="/dashboard" className="flex items-center gap-2">
-              <Sparkles className="w-7 h-7 text-purple-600" />
-              <span className="text-lg font-bold text-gray-800">
-                Animation Prompt Generator
-              </span>
+              {/* Mobile: show logomark */}
+              <Image
+                src="/images/IP Ventures Logomark Black.png"
+                alt="IP Ventures"
+                width={32}
+                height={32}
+                className="sm:hidden"
+              />
+              {/* Desktop: show full logo */}
+              <Image
+                src="/images/IP Ventures Long Logo Full Black.svg"
+                alt="IP Ventures"
+                width={150}
+                height={40}
+                className="hidden sm:block"
+              />
             </Link>
 
             <nav className="flex items-center gap-1">
@@ -41,13 +53,6 @@ export default async function DashboardLayout({
               >
                 <Sparkles className="w-4 h-4" />
                 <span className="hidden sm:inline">Generator</span>
-              </Link>
-              <Link
-                href="/dashboard/projects"
-                className="flex items-center gap-2 px-4 py-2 text-gray-700 hover:bg-purple-50 rounded-lg transition-colors"
-              >
-                <FolderOpen className="w-4 h-4" />
-                <span className="hidden sm:inline">Projects</span>
               </Link>
               <Link
                 href="/dashboard/history"
