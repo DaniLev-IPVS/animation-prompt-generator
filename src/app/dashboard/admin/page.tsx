@@ -13,7 +13,7 @@ import {
   Shield,
   ShieldCheck,
   User,
-  ExternalLink,
+  Eye,
   ChevronLeft,
   ChevronRight,
   Ban,
@@ -122,26 +122,6 @@ export default function AdminPage() {
     }
   };
 
-  const getRoleBadge = (role: UserRole) => {
-    const styles: Record<UserRole, string> = {
-      [UserRole.SUPER_ADMIN]: 'bg-purple-500/20 text-purple-400 border-purple-500/30',
-      [UserRole.ADMIN]: 'bg-blue-500/20 text-blue-400 border-blue-500/30',
-      [UserRole.USER]: 'bg-gray-500/20 text-theme-muted border-gray-500/30',
-      [UserRole.REVOKED]: 'bg-red-500/20 text-red-400 border-red-500/30',
-    };
-    const labels: Record<UserRole, string> = {
-      [UserRole.SUPER_ADMIN]: 'Super Admin',
-      [UserRole.ADMIN]: 'Admin',
-      [UserRole.USER]: 'User',
-      [UserRole.REVOKED]: 'Revoked',
-    };
-    return (
-      <span className={`px-2 py-1 text-xs rounded-full border ${styles[role]}`}>
-        {labels[role]}
-      </span>
-    );
-  };
-
   if (isLoading) {
     return (
       <div className="p-6 flex items-center justify-center min-h-[400px]">
@@ -211,9 +191,7 @@ export default function AdminPage() {
                 <th className="text-center px-4 py-3 text-sm font-semibold text-theme-secondary">Tokens</th>
                 <th className="text-left px-4 py-3 text-sm font-semibold text-theme-secondary">Signed Up</th>
                 <th className="text-left px-4 py-3 text-sm font-semibold text-theme-secondary">Last Active</th>
-                {isSuperAdmin && (
-                  <th className="text-center px-4 py-3 text-sm font-semibold text-theme-secondary">Actions</th>
-                )}
+                <th className="text-center px-4 py-3 text-sm font-semibold text-theme-secondary"></th>
               </tr>
             </thead>
             <tbody>
@@ -230,7 +208,30 @@ export default function AdminPage() {
                       </div>
                     </div>
                   </td>
-                  <td className="px-4 py-3">{getRoleBadge(user.role)}</td>
+                  <td className="px-4 py-3">
+                    <div className="flex items-center gap-2">
+                      {isSuperAdmin && user.id !== session?.user?.id ? (
+                        <>
+                          <select
+                            value={user.role}
+                            onChange={(e) => updateUserRole(user.id, e.target.value as UserRole)}
+                            disabled={updatingUserId === user.id}
+                            className="px-2 py-1.5 text-xs bg-theme-tertiary border border-theme-primary rounded text-theme-secondary focus:outline-none focus:ring-2 focus:ring-purple-500 disabled:opacity-50"
+                          >
+                            <option value={UserRole.REVOKED}>Revoked</option>
+                            <option value={UserRole.USER}>User</option>
+                            <option value={UserRole.ADMIN}>Admin</option>
+                            <option value={UserRole.SUPER_ADMIN}>Super Admin</option>
+                          </select>
+                          {updatingUserId === user.id && (
+                            <Loader2 className="w-3 h-3 animate-spin text-purple-400" />
+                          )}
+                        </>
+                      ) : (
+                        <RoleBadge role={user.role} isYou={user.id === session?.user?.id} />
+                      )}
+                    </div>
+                  </td>
                   <td className="px-4 py-3 text-center text-theme-secondary">{user.projectCount}</td>
                   <td className="px-4 py-3 text-center text-theme-secondary">{user.generationCount}</td>
                   <td className="px-4 py-3 text-center text-theme-secondary">
@@ -245,38 +246,15 @@ export default function AdminPage() {
                       : 'Never'
                     }
                   </td>
-                  {isSuperAdmin && (
-                    <td className="px-4 py-3">
-                      <div className="flex items-center justify-center gap-2">
-                        {/* Role dropdown - only show if not current user */}
-                        {user.id !== session?.user?.id ? (
-                          <select
-                            value={user.role}
-                            onChange={(e) => updateUserRole(user.id, e.target.value as UserRole)}
-                            disabled={updatingUserId === user.id}
-                            className="px-2 py-1 text-xs bg-theme-tertiary border border-theme-primary rounded text-theme-secondary focus:outline-none focus:ring-2 focus:ring-purple-500 disabled:opacity-50"
-                          >
-                            <option value={UserRole.REVOKED}>Revoked</option>
-                            <option value={UserRole.USER}>User</option>
-                            <option value={UserRole.ADMIN}>Admin</option>
-                            <option value={UserRole.SUPER_ADMIN}>Super Admin</option>
-                          </select>
-                        ) : (
-                          <span className="text-xs text-theme-muted italic">You</span>
-                        )}
-                        {updatingUserId === user.id && (
-                          <Loader2 className="w-3 h-3 animate-spin text-purple-400" />
-                        )}
-                        <Link
-                          href={`/dashboard/admin/users/${user.id}`}
-                          className="p-1 text-theme-muted hover:text-purple-400 transition-colors"
-                          title="View user details"
-                        >
-                          <ExternalLink className="w-4 h-4" />
-                        </Link>
-                      </div>
-                    </td>
-                  )}
+                  <td className="px-4 py-3">
+                    <Link
+                      href={`/dashboard/admin/users/${user.id}`}
+                      className="inline-flex items-center gap-1.5 px-3 py-1.5 text-sm bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors"
+                    >
+                      <Eye className="w-4 h-4" />
+                      View
+                    </Link>
+                  </td>
                 </tr>
               ))}
             </tbody>
@@ -309,6 +287,26 @@ export default function AdminPage() {
         )}
       </div>
     </div>
+  );
+}
+
+function RoleBadge({ role, isYou }: { role: UserRole; isYou?: boolean }) {
+  const styles: Record<UserRole, string> = {
+    [UserRole.SUPER_ADMIN]: 'bg-purple-500/20 text-purple-400 border-purple-500/30',
+    [UserRole.ADMIN]: 'bg-blue-500/20 text-blue-400 border-blue-500/30',
+    [UserRole.USER]: 'bg-gray-500/20 text-theme-muted border-gray-500/30',
+    [UserRole.REVOKED]: 'bg-red-500/20 text-red-400 border-red-500/30',
+  };
+  const labels: Record<UserRole, string> = {
+    [UserRole.SUPER_ADMIN]: 'Super Admin',
+    [UserRole.ADMIN]: 'Admin',
+    [UserRole.USER]: 'User',
+    [UserRole.REVOKED]: 'Revoked',
+  };
+  return (
+    <span className={`px-2 py-1 text-xs rounded-full border ${styles[role]}`}>
+      {labels[role]}{isYou && ' (You)'}
+    </span>
   );
 }
 
