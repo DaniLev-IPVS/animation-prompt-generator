@@ -17,6 +17,8 @@ import {
   ChevronLeft,
   ChevronRight,
   Ban,
+  AlertTriangle,
+  X,
 } from 'lucide-react';
 import { UserRole } from '@/types';
 
@@ -39,6 +41,14 @@ interface AdminUserStats {
   usersThisMonth: number;
 }
 
+interface ConfirmationModal {
+  isOpen: boolean;
+  userId: string;
+  userEmail: string;
+  currentRole: UserRole;
+  newRole: UserRole;
+}
+
 export default function AdminPage() {
   const { data: session } = useSession();
   const [users, setUsers] = useState<AdminUser[]>([]);
@@ -48,6 +58,13 @@ export default function AdminPage() {
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [updatingUserId, setUpdatingUserId] = useState<string | null>(null);
+  const [confirmModal, setConfirmModal] = useState<ConfirmationModal>({
+    isOpen: false,
+    userId: '',
+    userEmail: '',
+    currentRole: UserRole.USER,
+    newRole: UserRole.USER,
+  });
 
   const isSuperAdmin = session?.user?.role === UserRole.SUPER_ADMIN;
 
@@ -86,6 +103,38 @@ export default function AdminPage() {
     }
   };
 
+  // Check if role change requires confirmation
+  const requiresConfirmation = (currentRole: UserRole, newRole: UserRole): boolean => {
+    // Confirm when promoting to or demoting from Super Admin
+    if (newRole === UserRole.SUPER_ADMIN || currentRole === UserRole.SUPER_ADMIN) {
+      return true;
+    }
+    // Confirm when revoking access
+    if (newRole === UserRole.REVOKED) {
+      return true;
+    }
+    return false;
+  };
+
+  const handleRoleChange = (userId: string, userEmail: string, currentRole: UserRole, newRole: UserRole) => {
+    if (requiresConfirmation(currentRole, newRole)) {
+      setConfirmModal({
+        isOpen: true,
+        userId,
+        userEmail,
+        currentRole,
+        newRole,
+      });
+    } else {
+      updateUserRole(userId, newRole);
+    }
+  };
+
+  const confirmRoleChange = () => {
+    updateUserRole(confirmModal.userId, confirmModal.newRole);
+    setConfirmModal({ ...confirmModal, isOpen: false });
+  };
+
   const updateUserRole = async (userId: string, newRole: UserRole) => {
     if (!isSuperAdmin) return;
 
@@ -122,6 +171,16 @@ export default function AdminPage() {
     }
   };
 
+  const getRoleLabel = (role: UserRole): string => {
+    const labels: Record<UserRole, string> = {
+      [UserRole.SUPER_ADMIN]: 'Super Admin',
+      [UserRole.ADMIN]: 'Admin',
+      [UserRole.USER]: 'User',
+      [UserRole.REVOKED]: 'Revoked',
+    };
+    return labels[role];
+  };
+
   if (isLoading) {
     return (
       <div className="p-6 flex items-center justify-center min-h-[400px]">
@@ -133,6 +192,63 @@ export default function AdminPage() {
   return (
     <div className="p-6 max-w-7xl mx-auto">
       <h1 className="text-2xl font-bold text-theme-primary mb-6">Admin Dashboard</h1>
+
+      {/* Confirmation Modal */}
+      {confirmModal.isOpen && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+          <div className="bg-theme-secondary border border-theme-primary rounded-xl p-6 max-w-md w-full mx-4 shadow-xl">
+            <div className="flex items-center gap-3 mb-4">
+              <div className="w-10 h-10 rounded-full bg-amber-500/20 flex items-center justify-center">
+                <AlertTriangle className="w-5 h-5 text-amber-400" />
+              </div>
+              <h2 className="text-lg font-semibold text-theme-primary">Confirm Role Change</h2>
+            </div>
+
+            <p className="text-theme-secondary mb-4">
+              Are you sure you want to change <span className="font-semibold text-theme-primary">{confirmModal.userEmail}</span> from{' '}
+              <span className="font-semibold text-theme-primary">{getRoleLabel(confirmModal.currentRole)}</span> to{' '}
+              <span className={`font-semibold ${confirmModal.newRole === UserRole.REVOKED ? 'text-red-400' : confirmModal.newRole === UserRole.SUPER_ADMIN ? 'text-purple-400' : 'text-theme-primary'}`}>
+                {getRoleLabel(confirmModal.newRole)}
+              </span>?
+            </p>
+
+            {confirmModal.newRole === UserRole.SUPER_ADMIN && (
+              <div className="bg-purple-500/10 border border-purple-500/30 rounded-lg p-3 mb-4">
+                <p className="text-sm text-purple-400">
+                  <strong>Warning:</strong> This will give the user full administrative privileges, including the ability to modify other users and access all projects.
+                </p>
+              </div>
+            )}
+
+            {confirmModal.newRole === UserRole.REVOKED && (
+              <div className="bg-red-500/10 border border-red-500/30 rounded-lg p-3 mb-4">
+                <p className="text-sm text-red-400">
+                  <strong>Warning:</strong> This will prevent the user from logging in. They will lose access to their account.
+                </p>
+              </div>
+            )}
+
+            <div className="flex gap-3 justify-end">
+              <button
+                onClick={() => setConfirmModal({ ...confirmModal, isOpen: false })}
+                className="px-4 py-2 text-sm text-theme-secondary hover:text-theme-primary transition-colors"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={confirmRoleChange}
+                className={`px-4 py-2 text-sm text-white rounded-lg transition-colors ${
+                  confirmModal.newRole === UserRole.REVOKED
+                    ? 'bg-red-600 hover:bg-red-700'
+                    : 'bg-purple-600 hover:bg-purple-700'
+                }`}
+              >
+                Confirm Change
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Stats Cards */}
       {stats && (
@@ -214,7 +330,7 @@ export default function AdminPage() {
                         <>
                           <select
                             value={user.role}
-                            onChange={(e) => updateUserRole(user.id, e.target.value as UserRole)}
+                            onChange={(e) => handleRoleChange(user.id, user.email, user.role, e.target.value as UserRole)}
                             disabled={updatingUserId === user.id}
                             className="px-2 py-1.5 text-xs bg-theme-tertiary border border-theme-primary rounded text-theme-secondary focus:outline-none focus:ring-2 focus:ring-purple-500 disabled:opacity-50"
                           >

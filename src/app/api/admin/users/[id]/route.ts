@@ -29,6 +29,11 @@ export async function GET(
         role: true,
         createdAt: true,
         lastActiveAt: true,
+        settings: {
+          select: {
+            anthropicApiKey: true,
+          },
+        },
         projects: {
           orderBy: { updatedAt: 'desc' },
           select: {
@@ -83,6 +88,7 @@ export async function GET(
       projectCount: user._count.projects,
       generationCount: user._count.history,
       totalTokensUsed: tokenStats._sum.tokensUsed || 0,
+      hasApiKey: !!user.settings?.anthropicApiKey,
       projects: projectsWithStats,
     });
   } catch (error) {
@@ -107,39 +113,59 @@ export async function PATCH(
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    // Only super admin can modify roles
+    // Only super admin can modify users
     if (session.user.role !== UserRole.SUPER_ADMIN) {
       return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
     }
 
-    // Prevent self-demotion
-    if (id === session.user.id) {
-      return NextResponse.json(
-        { error: 'Cannot modify your own role' },
-        { status: 400 }
-      );
-    }
-
     const body = await request.json();
-    const { role } = body;
+    const { role, anthropicApiKey } = body;
 
-    // Validate role value
-    if (!Object.values(UserRole).includes(role)) {
-      return NextResponse.json({ error: 'Invalid role' }, { status: 400 });
+    // Handle role update
+    if (role !== undefined) {
+      // Prevent self-modification for role
+      if (id === session.user.id) {
+        return NextResponse.json(
+          { error: 'Cannot modify your own role' },
+          { status: 400 }
+        );
+      }
+
+      // Validate role value
+      if (!Object.values(UserRole).includes(role)) {
+        return NextResponse.json({ error: 'Invalid role' }, { status: 400 });
+      }
+
+      const user = await prisma.user.update({
+        where: { id },
+        data: { role },
+        select: {
+          id: true,
+          email: true,
+          name: true,
+          role: true,
+        },
+      });
+
+      return NextResponse.json(user);
     }
 
-    const user = await prisma.user.update({
-      where: { id },
-      data: { role },
-      select: {
-        id: true,
-        email: true,
-        name: true,
-        role: true,
-      },
-    });
+    // Handle API key update
+    if (anthropicApiKey !== undefined) {
+      // Upsert the user settings with the new API key
+      await prisma.userSettings.upsert({
+        where: { userId: id },
+        update: { anthropicApiKey },
+        create: {
+          userId: id,
+          anthropicApiKey,
+        },
+      });
 
-    return NextResponse.json(user);
+      return NextResponse.json({ success: true, hasApiKey: !!anthropicApiKey });
+    }
+
+    return NextResponse.json({ error: 'No valid update provided' }, { status: 400 });
   } catch (error) {
     console.error('Update user role error:', error);
     return NextResponse.json(

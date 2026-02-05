@@ -17,7 +17,8 @@ export default function DashboardHeader({ user }: DashboardHeaderProps) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const handleSignOut = () => {
-    signOut({ callbackUrl: '/' });
+    // Use window.location.origin to ensure redirect stays on current domain
+    signOut({ callbackUrl: `${window.location.origin}/` });
   };
 
   return (

@@ -16,6 +16,10 @@ import {
   Clock,
   ExternalLink,
   Edit,
+  Key,
+  Check,
+  X,
+  Save,
 } from 'lucide-react';
 import { UserRole } from '@/types';
 
@@ -40,6 +44,7 @@ interface UserDetails {
   projectCount: number;
   generationCount: number;
   totalTokensUsed: number;
+  hasApiKey: boolean;
   projects: UserProject[];
 }
 
@@ -50,6 +55,10 @@ export default function UserDetailPage({ params }: { params: Promise<{ id: strin
   const [user, setUser] = useState<UserDetails | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [showApiKeyInput, setShowApiKeyInput] = useState(false);
+  const [apiKeyInput, setApiKeyInput] = useState('');
+  const [isSavingApiKey, setIsSavingApiKey] = useState(false);
+  const [apiKeyMessage, setApiKeyMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
 
   const isSuperAdmin = session?.user?.role === UserRole.SUPER_ADMIN;
 
@@ -77,6 +86,65 @@ export default function UserDetailPage({ params }: { params: Promise<{ id: strin
       setError('Failed to load user');
     } finally {
       setIsLoading(false);
+    }
+  };
+
+  const handleSaveApiKey = async () => {
+    if (!apiKeyInput.trim()) {
+      setApiKeyMessage({ type: 'error', text: 'Please enter an API key' });
+      return;
+    }
+
+    setIsSavingApiKey(true);
+    setApiKeyMessage(null);
+
+    try {
+      const response = await fetch(`/api/admin/users/${resolvedParams.id}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ anthropicApiKey: apiKeyInput.trim() }),
+      });
+
+      if (response.ok) {
+        setUser(prev => prev ? { ...prev, hasApiKey: true } : null);
+        setApiKeyInput('');
+        setShowApiKeyInput(false);
+        setApiKeyMessage({ type: 'success', text: 'API key saved successfully' });
+        setTimeout(() => setApiKeyMessage(null), 3000);
+      } else {
+        setApiKeyMessage({ type: 'error', text: 'Failed to save API key' });
+      }
+    } catch (err) {
+      console.error('Failed to save API key:', err);
+      setApiKeyMessage({ type: 'error', text: 'Failed to save API key' });
+    } finally {
+      setIsSavingApiKey(false);
+    }
+  };
+
+  const handleRemoveApiKey = async () => {
+    setIsSavingApiKey(true);
+    setApiKeyMessage(null);
+
+    try {
+      const response = await fetch(`/api/admin/users/${resolvedParams.id}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ anthropicApiKey: null }),
+      });
+
+      if (response.ok) {
+        setUser(prev => prev ? { ...prev, hasApiKey: false } : null);
+        setApiKeyMessage({ type: 'success', text: 'API key removed' });
+        setTimeout(() => setApiKeyMessage(null), 3000);
+      } else {
+        setApiKeyMessage({ type: 'error', text: 'Failed to remove API key' });
+      }
+    } catch (err) {
+      console.error('Failed to remove API key:', err);
+      setApiKeyMessage({ type: 'error', text: 'Failed to remove API key' });
+    } finally {
+      setIsSavingApiKey(false);
     }
   };
 
@@ -211,6 +279,104 @@ export default function UserDetailPage({ params }: { params: Promise<{ id: strin
             Total Tokens Used: <span className="text-theme-primary font-semibold">{user.totalTokensUsed.toLocaleString()}</span>
           </div>
         </div>
+      </div>
+
+      {/* API Key Section */}
+      <div className="bg-theme-secondary rounded-xl border border-theme-primary p-6 mb-6">
+        <div className="flex items-center justify-between mb-4">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-lg bg-amber-500/20 flex items-center justify-center">
+              <Key className="w-5 h-5 text-amber-400" />
+            </div>
+            <div>
+              <h2 className="text-lg font-semibold text-theme-primary">Anthropic API Key</h2>
+              <p className="text-sm text-theme-muted">Manage user&apos;s API key for AI generations</p>
+            </div>
+          </div>
+          <div className="flex items-center gap-2">
+            {user.hasApiKey ? (
+              <span className="flex items-center gap-1.5 px-3 py-1.5 bg-green-500/20 text-green-400 rounded-lg text-sm">
+                <Check className="w-4 h-4" />
+                API Key Set
+              </span>
+            ) : (
+              <span className="flex items-center gap-1.5 px-3 py-1.5 bg-red-500/20 text-red-400 rounded-lg text-sm">
+                <X className="w-4 h-4" />
+                No API Key
+              </span>
+            )}
+          </div>
+        </div>
+
+        {apiKeyMessage && (
+          <div className={`mb-4 p-3 rounded-lg text-sm ${
+            apiKeyMessage.type === 'success'
+              ? 'bg-green-500/10 border border-green-500/30 text-green-400'
+              : 'bg-red-500/10 border border-red-500/30 text-red-400'
+          }`}>
+            {apiKeyMessage.text}
+          </div>
+        )}
+
+        {showApiKeyInput ? (
+          <div className="space-y-3">
+            <input
+              type="password"
+              value={apiKeyInput}
+              onChange={(e) => setApiKeyInput(e.target.value)}
+              placeholder="sk-ant-api..."
+              className="w-full px-4 py-2.5 bg-theme-tertiary border border-theme-primary rounded-lg text-theme-primary placeholder-theme-muted focus:outline-none focus:ring-2 focus:ring-purple-500/50"
+            />
+            <div className="flex items-center gap-2">
+              <button
+                onClick={handleSaveApiKey}
+                disabled={isSavingApiKey}
+                className="flex items-center gap-2 px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-lg transition-colors disabled:opacity-50"
+              >
+                {isSavingApiKey ? (
+                  <Loader2 className="w-4 h-4 animate-spin" />
+                ) : (
+                  <Save className="w-4 h-4" />
+                )}
+                Save API Key
+              </button>
+              <button
+                onClick={() => {
+                  setShowApiKeyInput(false);
+                  setApiKeyInput('');
+                  setApiKeyMessage(null);
+                }}
+                className="px-4 py-2 bg-theme-tertiary hover:bg-theme-primary text-theme-secondary rounded-lg transition-colors"
+              >
+                Cancel
+              </button>
+            </div>
+          </div>
+        ) : (
+          <div className="flex items-center gap-2">
+            <button
+              onClick={() => setShowApiKeyInput(true)}
+              className="flex items-center gap-2 px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-lg transition-colors"
+            >
+              <Key className="w-4 h-4" />
+              {user.hasApiKey ? 'Update API Key' : 'Add API Key'}
+            </button>
+            {user.hasApiKey && (
+              <button
+                onClick={handleRemoveApiKey}
+                disabled={isSavingApiKey}
+                className="flex items-center gap-2 px-4 py-2 bg-red-500/20 hover:bg-red-500/30 text-red-400 rounded-lg transition-colors disabled:opacity-50"
+              >
+                {isSavingApiKey ? (
+                  <Loader2 className="w-4 h-4 animate-spin" />
+                ) : (
+                  <X className="w-4 h-4" />
+                )}
+                Remove Key
+              </button>
+            )}
+          </div>
+        )}
       </div>
 
       {/* User Projects */}
