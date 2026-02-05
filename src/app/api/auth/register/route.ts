@@ -50,10 +50,11 @@ export async function POST(request: NextRequest) {
       email: user.email,
       name: user.name,
     });
-  } catch (error) {
+  } catch (error: unknown) {
     console.error('Registration error:', error);
+    const errorMessage = error instanceof Error ? error.message : 'Unknown error';
     return NextResponse.json(
-      { error: 'Something went wrong' },
+      { error: `Registration failed: ${errorMessage}` },
       { status: 500 }
     );
   }
