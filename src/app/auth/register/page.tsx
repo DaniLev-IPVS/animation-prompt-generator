@@ -68,17 +68,17 @@ export default function RegisterPage() {
 
   return (
     <div className="w-full max-w-md">
-      <div className="bg-white rounded-2xl shadow-xl p-8">
-        <h1 className="text-2xl font-bold text-gray-900 text-center mb-2">
+      <div className="bg-[#1a1a1a] rounded-2xl border border-[#2a2a2a] p-8">
+        <h1 className="text-2xl font-bold text-white text-center mb-2">
           Create Your Account
         </h1>
-        <p className="text-gray-600 text-center mb-8">
+        <p className="text-gray-400 text-center mb-8">
           Start generating animation prompts
         </p>
 
         <form onSubmit={handleSubmit} className="space-y-5">
           {error && (
-            <div className="bg-red-50 text-red-700 p-3 rounded-lg text-sm">
+            <div className="bg-red-900/30 border border-red-800 text-red-400 p-3 rounded-lg text-sm">
               {error}
             </div>
           )}
@@ -86,7 +86,7 @@ export default function RegisterPage() {
           <div>
             <label
               htmlFor="name"
-              className="block text-sm font-medium text-gray-700 mb-1"
+              className="block text-sm font-medium text-gray-300 mb-1"
             >
               Name (optional)
             </label>
@@ -95,7 +95,7 @@ export default function RegisterPage() {
               type="text"
               value={name}
               onChange={(e) => setName(e.target.value)}
-              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none transition-all"
+              className="w-full px-4 py-3 bg-[#252525] border border-[#3a3a3a] rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none transition-all text-white placeholder-gray-500"
               placeholder="Your name"
             />
           </div>
@@ -103,7 +103,7 @@ export default function RegisterPage() {
           <div>
             <label
               htmlFor="email"
-              className="block text-sm font-medium text-gray-700 mb-1"
+              className="block text-sm font-medium text-gray-300 mb-1"
             >
               Email
             </label>
@@ -112,7 +112,7 @@ export default function RegisterPage() {
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none transition-all"
+              className="w-full px-4 py-3 bg-[#252525] border border-[#3a3a3a] rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none transition-all text-white placeholder-gray-500"
               placeholder="you@example.com"
               required
             />
@@ -121,7 +121,7 @@ export default function RegisterPage() {
           <div>
             <label
               htmlFor="password"
-              className="block text-sm font-medium text-gray-700 mb-1"
+              className="block text-sm font-medium text-gray-300 mb-1"
             >
               Password
             </label>
@@ -131,7 +131,7 @@ export default function RegisterPage() {
                 type={showPassword ? 'text' : 'password'}
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none transition-all pr-12"
+                className="w-full px-4 py-3 bg-[#252525] border border-[#3a3a3a] rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none transition-all pr-12 text-white placeholder-gray-500"
                 placeholder="At least 8 characters"
                 required
                 minLength={8}
@@ -139,7 +139,7 @@ export default function RegisterPage() {
               <button
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700"
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-300"
               >
                 {showPassword ? (
                   <EyeOff className="w-5 h-5" />
@@ -153,7 +153,7 @@ export default function RegisterPage() {
           <div>
             <label
               htmlFor="confirmPassword"
-              className="block text-sm font-medium text-gray-700 mb-1"
+              className="block text-sm font-medium text-gray-300 mb-1"
             >
               Confirm Password
             </label>
@@ -162,7 +162,7 @@ export default function RegisterPage() {
               type="password"
               value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)}
-              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none transition-all"
+              className="w-full px-4 py-3 bg-[#252525] border border-[#3a3a3a] rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none transition-all text-white placeholder-gray-500"
               placeholder="Confirm your password"
               required
             />
@@ -171,18 +171,18 @@ export default function RegisterPage() {
           <button
             type="submit"
             disabled={isLoading}
-            className="w-full py-3 px-4 bg-purple-600 text-white rounded-lg font-semibold hover:bg-purple-700 disabled:bg-purple-400 disabled:cursor-not-allowed transition-colors flex items-center justify-center gap-2"
+            className="w-full py-3 px-4 bg-purple-600 text-white rounded-lg font-semibold hover:bg-purple-700 disabled:bg-purple-800 disabled:cursor-not-allowed transition-colors flex items-center justify-center gap-2"
           >
             {isLoading && <Loader2 className="w-5 h-5 animate-spin" />}
             {isLoading ? 'Creating account...' : 'Create Account'}
           </button>
         </form>
 
-        <p className="mt-6 text-center text-gray-600">
+        <p className="mt-6 text-center text-gray-400">
           Already have an account?{' '}
           <Link
             href="/auth/login"
-            className="text-purple-600 font-semibold hover:underline"
+            className="text-purple-400 font-semibold hover:underline"
           >
             Sign in
           </Link>

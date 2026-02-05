@@ -14,7 +14,7 @@ export default async function HomePage() {
 
   // If not logged in, show landing page
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-50 to-blue-50">
+    <div className="min-h-screen bg-[#0f0f0f]">
       {/* Header */}
       <header className="container mx-auto px-4 py-6">
         <nav className="flex items-center justify-between">
@@ -24,20 +24,20 @@ export default async function HomePage() {
               alt="IP Ventures"
               width={40}
               height={40}
-              className="sm:hidden"
+              className="sm:hidden invert"
             />
             <Image
               src="/images/IP Ventures Long Logo Full Black.svg"
               alt="IP Ventures"
               width={180}
               height={48}
-              className="hidden sm:block"
+              className="hidden sm:block invert"
             />
           </Link>
           <div className="flex items-center gap-4">
             <Link
               href="/auth/login"
-              className="px-4 py-2 text-gray-700 hover:text-purple-600 transition-colors"
+              className="px-4 py-2 text-gray-300 hover:text-purple-400 transition-colors"
             >
               Sign In
             </Link>
@@ -54,11 +54,11 @@ export default async function HomePage() {
       {/* Hero */}
       <main className="container mx-auto px-4 py-20">
         <div className="text-center max-w-3xl mx-auto">
-          <h1 className="text-5xl font-bold text-gray-900 mb-6">
+          <h1 className="text-5xl font-bold text-white mb-6">
             Transform Your Stories into
-            <span className="text-purple-600"> Animation-Ready Prompts</span>
+            <span className="text-purple-400"> Animation-Ready Prompts</span>
           </h1>
-          <p className="text-xl text-gray-600 mb-8">
+          <p className="text-xl text-gray-400 mb-8">
             Chat with AI to develop your story, then automatically generate
             detailed prompts for characters, backgrounds, frames, and animations.
           </p>
@@ -71,7 +71,7 @@ export default async function HomePage() {
             </Link>
             <Link
               href="/auth/login"
-              className="px-8 py-4 bg-white text-purple-600 border-2 border-purple-600 rounded-xl text-lg font-semibold hover:bg-purple-50 transition-colors"
+              className="px-8 py-4 bg-[#1a1a1a] text-purple-400 border-2 border-purple-600 rounded-xl text-lg font-semibold hover:bg-[#252525] transition-colors"
             >
               Sign In
             </Link>
@@ -80,41 +80,41 @@ export default async function HomePage() {
 
         {/* Features */}
         <div className="grid md:grid-cols-3 gap-8 mt-24">
-          <div className="bg-white p-8 rounded-2xl shadow-lg">
-            <div className="w-12 h-12 bg-purple-100 rounded-xl flex items-center justify-center mb-4">
-              <Zap className="w-6 h-6 text-purple-600" />
+          <div className="bg-[#1a1a1a] p-8 rounded-2xl border border-[#2a2a2a]">
+            <div className="w-12 h-12 bg-purple-900/50 rounded-xl flex items-center justify-center mb-4">
+              <Zap className="w-6 h-6 text-purple-400" />
             </div>
-            <h3 className="text-xl font-bold text-gray-900 mb-2">
+            <h3 className="text-xl font-bold text-white mb-2">
               8-Stage Pipeline
             </h3>
-            <p className="text-gray-600">
+            <p className="text-gray-400">
               From story concept to animation prompts. Generate shot lists,
               art styles, characters, backgrounds, items, frames, and
               animation directions.
             </p>
           </div>
 
-          <div className="bg-white p-8 rounded-2xl shadow-lg">
-            <div className="w-12 h-12 bg-green-100 rounded-xl flex items-center justify-center mb-4">
-              <Shield className="w-6 h-6 text-green-600" />
+          <div className="bg-[#1a1a1a] p-8 rounded-2xl border border-[#2a2a2a]">
+            <div className="w-12 h-12 bg-green-900/50 rounded-xl flex items-center justify-center mb-4">
+              <Shield className="w-6 h-6 text-green-400" />
             </div>
-            <h3 className="text-xl font-bold text-gray-900 mb-2">
+            <h3 className="text-xl font-bold text-white mb-2">
               Secure API Keys
             </h3>
-            <p className="text-gray-600">
+            <p className="text-gray-400">
               Your Anthropic API key is encrypted and stored securely. All AI
               calls happen server-side - your key is never exposed.
             </p>
           </div>
 
-          <div className="bg-white p-8 rounded-2xl shadow-lg">
-            <div className="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center mb-4">
-              <Share2 className="w-6 h-6 text-blue-600" />
+          <div className="bg-[#1a1a1a] p-8 rounded-2xl border border-[#2a2a2a]">
+            <div className="w-12 h-12 bg-blue-900/50 rounded-xl flex items-center justify-center mb-4">
+              <Share2 className="w-6 h-6 text-blue-400" />
             </div>
-            <h3 className="text-xl font-bold text-gray-900 mb-2">
+            <h3 className="text-xl font-bold text-white mb-2">
               Save & Share
             </h3>
-            <p className="text-gray-600">
+            <p className="text-gray-400">
               Auto-save your projects to the cloud. Share your animation
               prompts with collaborators using unique links.
             </p>
@@ -123,7 +123,7 @@ export default async function HomePage() {
 
         {/* How it works */}
         <div className="mt-24">
-          <h2 className="text-3xl font-bold text-center text-gray-900 mb-12">
+          <h2 className="text-3xl font-bold text-center text-white mb-12">
             How It Works
           </h2>
           <div className="grid md:grid-cols-4 gap-6">
@@ -137,8 +137,8 @@ export default async function HomePage() {
                 <div className="w-12 h-12 bg-purple-600 text-white rounded-full flex items-center justify-center text-xl font-bold mx-auto mb-4">
                   {step}
                 </div>
-                <h3 className="font-bold text-gray-900 mb-2">{title}</h3>
-                <p className="text-sm text-gray-600">{desc}</p>
+                <h3 className="font-bold text-white mb-2">{title}</h3>
+                <p className="text-sm text-gray-400">{desc}</p>
               </div>
             ))}
           </div>
@@ -146,7 +146,7 @@ export default async function HomePage() {
       </main>
 
       {/* Footer */}
-      <footer className="container mx-auto px-4 py-8 mt-20 border-t">
+      <footer className="container mx-auto px-4 py-8 mt-20 border-t border-[#2a2a2a]">
         <div className="text-center text-gray-500 text-sm">
           <p>Powered by Claude AI from Anthropic</p>
         </div>

@@ -84,25 +84,25 @@ export default function HistoryPage() {
 
   const getStageColor = (stage: string) => {
     const colors: Record<string, string> = {
-      'story-chat': 'bg-purple-100 text-purple-700',
-      'story-extract': 'bg-purple-100 text-purple-700',
-      'analysis': 'bg-blue-100 text-blue-700',
-      'scene-plan': 'bg-blue-100 text-blue-700',
-      'shots': 'bg-green-100 text-green-700',
-      'style': 'bg-pink-100 text-pink-700',
-      'characters': 'bg-amber-100 text-amber-700',
-      'backgrounds': 'bg-emerald-100 text-emerald-700',
-      'items': 'bg-orange-100 text-orange-700',
-      'frames': 'bg-indigo-100 text-indigo-700',
-      'animation': 'bg-violet-100 text-violet-700',
+      'story-chat': 'bg-purple-900/50 text-purple-300',
+      'story-extract': 'bg-purple-900/50 text-purple-300',
+      'analysis': 'bg-blue-900/50 text-blue-300',
+      'scene-plan': 'bg-blue-900/50 text-blue-300',
+      'shots': 'bg-green-900/50 text-green-300',
+      'style': 'bg-pink-900/50 text-pink-300',
+      'characters': 'bg-amber-900/50 text-amber-300',
+      'backgrounds': 'bg-emerald-900/50 text-emerald-300',
+      'items': 'bg-orange-900/50 text-orange-300',
+      'frames': 'bg-indigo-900/50 text-indigo-300',
+      'animation': 'bg-violet-900/50 text-violet-300',
     };
-    return colors[stage] || 'bg-gray-100 text-gray-700';
+    return colors[stage] || 'bg-gray-700 text-gray-300';
   };
 
   if (isLoading) {
     return (
       <div className="p-6 flex items-center justify-center min-h-[400px]">
-        <Loader2 className="w-8 h-8 animate-spin text-purple-600" />
+        <Loader2 className="w-8 h-8 animate-spin text-purple-400" />
       </div>
     );
   }
@@ -111,9 +111,9 @@ export default function HistoryPage() {
     <div className="p-6 max-w-4xl mx-auto">
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">Generation History</h1>
+          <h1 className="text-2xl font-bold text-white">Generation History</h1>
           {data && (
-            <p className="text-sm text-gray-600 mt-1">
+            <p className="text-sm text-gray-400 mt-1">
               {data.stats.totalGenerations} generations total
             </p>
           )}
@@ -121,7 +121,7 @@ export default function HistoryPage() {
         {data && data.history.length > 0 && (
           <button
             onClick={clearHistory}
-            className="px-4 py-2 text-red-600 hover:bg-red-50 rounded-lg flex items-center gap-2 transition-colors"
+            className="px-4 py-2 text-red-400 hover:bg-red-900/20 rounded-lg flex items-center gap-2 transition-colors"
           >
             <Trash2 className="w-4 h-4" />
             Clear History
@@ -132,89 +132,89 @@ export default function HistoryPage() {
       {/* Cost Statistics */}
       {data && (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-          <div className="bg-white rounded-xl shadow-lg p-4">
+          <div className="bg-[#1a1a1a] rounded-xl border border-[#2a2a2a] p-4">
             <div className="flex items-center gap-2 mb-2">
-              <DollarSign className="w-5 h-5 text-purple-600" />
-              <h3 className="font-semibold text-gray-700">All Time</h3>
+              <DollarSign className="w-5 h-5 text-purple-400" />
+              <h3 className="font-semibold text-gray-300">All Time</h3>
             </div>
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <p className="text-2xl font-bold text-gray-900">{data.stats.totalTokensUsed.toLocaleString()}</p>
+                <p className="text-2xl font-bold text-white">{data.stats.totalTokensUsed.toLocaleString()}</p>
                 <p className="text-xs text-gray-500">tokens used</p>
               </div>
               <div>
-                <p className="text-2xl font-bold text-purple-600">{calculateCost(data.stats.totalTokensUsed)}</p>
+                <p className="text-2xl font-bold text-purple-400">{calculateCost(data.stats.totalTokensUsed)}</p>
                 <p className="text-xs text-gray-500">estimated cost</p>
               </div>
             </div>
           </div>
-          <div className="bg-white rounded-xl shadow-lg p-4">
+          <div className="bg-[#1a1a1a] rounded-xl border border-[#2a2a2a] p-4">
             <div className="flex items-center gap-2 mb-2">
-              <DollarSign className="w-5 h-5 text-green-600" />
-              <h3 className="font-semibold text-gray-700">This Month</h3>
+              <DollarSign className="w-5 h-5 text-green-400" />
+              <h3 className="font-semibold text-gray-300">This Month</h3>
             </div>
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <p className="text-2xl font-bold text-gray-900">{(data.stats.monthlyTokensUsed || 0).toLocaleString()}</p>
+                <p className="text-2xl font-bold text-white">{(data.stats.monthlyTokensUsed || 0).toLocaleString()}</p>
                 <p className="text-xs text-gray-500">tokens used</p>
               </div>
               <div>
-                <p className="text-2xl font-bold text-green-600">{calculateCost(data.stats.monthlyTokensUsed || 0)}</p>
+                <p className="text-2xl font-bold text-green-400">{calculateCost(data.stats.monthlyTokensUsed || 0)}</p>
                 <p className="text-xs text-gray-500">estimated cost</p>
               </div>
             </div>
-            <p className="text-xs text-gray-400 mt-2">{data.stats.monthlyGenerations || 0} generations this month</p>
+            <p className="text-xs text-gray-500 mt-2">{data.stats.monthlyGenerations || 0} generations this month</p>
           </div>
         </div>
       )}
 
       {!data || data.history.length === 0 ? (
-        <div className="text-center py-16 bg-white rounded-xl shadow-lg">
-          <History className="w-16 h-16 text-gray-300 mx-auto mb-4" />
-          <h2 className="text-xl font-semibold text-gray-700 mb-2">No history yet</h2>
+        <div className="text-center py-16 bg-[#1a1a1a] rounded-xl border border-[#2a2a2a]">
+          <History className="w-16 h-16 text-gray-600 mx-auto mb-4" />
+          <h2 className="text-xl font-semibold text-gray-300 mb-2">No history yet</h2>
           <p className="text-gray-500">Your AI generation history will appear here</p>
         </div>
       ) : (
         <>
           <div className="space-y-3">
             {data.history.map(entry => (
-              <div key={entry.id} className="bg-white rounded-xl shadow-lg overflow-hidden">
+              <div key={entry.id} className="bg-[#1a1a1a] rounded-xl border border-[#2a2a2a] overflow-hidden">
                 <button
                   onClick={() => setExpandedId(expandedId === entry.id ? null : entry.id)}
-                  className="w-full p-4 flex items-center justify-between hover:bg-gray-50 transition-colors"
+                  className="w-full p-4 flex items-center justify-between hover:bg-[#252525] transition-colors"
                 >
                   <div className="flex items-center gap-3">
                     <span className={`px-2 py-1 text-xs font-medium rounded ${getStageColor(entry.stage)}`}>
                       {entry.stage}
                     </span>
-                    <span className="text-sm text-gray-600">
+                    <span className="text-sm text-gray-400">
                       {new Date(entry.createdAt).toLocaleString()}
                     </span>
                     {entry.tokensUsed && (
-                      <span className="text-xs text-gray-400">
+                      <span className="text-xs text-gray-500">
                         {entry.tokensUsed.toLocaleString()} tokens
                       </span>
                     )}
                   </div>
                   {expandedId === entry.id ? (
-                    <ChevronDown className="w-5 h-5 text-gray-400" />
+                    <ChevronDown className="w-5 h-5 text-gray-500" />
                   ) : (
-                    <ChevronRight className="w-5 h-5 text-gray-400" />
+                    <ChevronRight className="w-5 h-5 text-gray-500" />
                   )}
                 </button>
 
                 {expandedId === entry.id && (
-                  <div className="px-4 pb-4 border-t">
+                  <div className="px-4 pb-4 border-t border-[#2a2a2a]">
                     <div className="grid md:grid-cols-2 gap-4 mt-4">
                       <div>
-                        <h4 className="text-sm font-semibold text-gray-700 mb-2">Prompt</h4>
-                        <pre className="text-xs text-gray-600 bg-gray-50 p-3 rounded-lg overflow-auto max-h-48 whitespace-pre-wrap">
+                        <h4 className="text-sm font-semibold text-gray-300 mb-2">Prompt</h4>
+                        <pre className="text-xs text-gray-400 bg-[#252525] p-3 rounded-lg overflow-auto max-h-48 whitespace-pre-wrap">
                           {entry.prompt.length > 1000 ? entry.prompt.slice(0, 1000) + '...' : entry.prompt}
                         </pre>
                       </div>
                       <div>
-                        <h4 className="text-sm font-semibold text-gray-700 mb-2">Response</h4>
-                        <pre className="text-xs text-gray-600 bg-gray-50 p-3 rounded-lg overflow-auto max-h-48 whitespace-pre-wrap">
+                        <h4 className="text-sm font-semibold text-gray-300 mb-2">Response</h4>
+                        <pre className="text-xs text-gray-400 bg-[#252525] p-3 rounded-lg overflow-auto max-h-48 whitespace-pre-wrap">
                           {entry.response.length > 1000 ? entry.response.slice(0, 1000) + '...' : entry.response}
                         </pre>
                       </div>
@@ -231,17 +231,17 @@ export default function HistoryPage() {
               <button
                 onClick={() => setPage(p => Math.max(1, p - 1))}
                 disabled={page === 1}
-                className="px-4 py-2 bg-gray-100 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed"
+                className="px-4 py-2 bg-[#252525] text-gray-300 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed hover:bg-[#303030]"
               >
                 Previous
               </button>
-              <span className="text-sm text-gray-600">
+              <span className="text-sm text-gray-400">
                 Page {page} of {data.pagination.totalPages}
               </span>
               <button
                 onClick={() => setPage(p => Math.min(data.pagination.totalPages, p + 1))}
                 disabled={page === data.pagination.totalPages}
-                className="px-4 py-2 bg-gray-100 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed"
+                className="px-4 py-2 bg-[#252525] text-gray-300 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed hover:bg-[#303030]"
               >
                 Next
               </button>

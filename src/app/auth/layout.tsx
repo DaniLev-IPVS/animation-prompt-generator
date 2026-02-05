@@ -7,7 +7,7 @@ export default function AuthLayout({
   children: React.ReactNode;
 }) {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-50 to-blue-50 flex flex-col">
+    <div className="min-h-screen bg-[#0f0f0f] flex flex-col">
       <header className="container mx-auto px-4 py-6">
         <Link href="/" className="flex items-center gap-2">
           <Image
@@ -15,14 +15,14 @@ export default function AuthLayout({
             alt="IP Ventures"
             width={40}
             height={40}
-            className="sm:hidden"
+            className="sm:hidden invert"
           />
           <Image
             src="/images/IP Ventures Long Logo Full Black.svg"
             alt="IP Ventures"
             width={180}
             height={48}
-            className="hidden sm:block"
+            className="hidden sm:block invert"
           />
         </Link>
       </header>
