@@ -39,10 +39,30 @@ export async function GET(request: NextRequest) {
       prisma.generationHistory.count({ where }),
     ]);
 
-    // Calculate total tokens used
+    // Calculate total tokens used (all time)
     const totalTokens = await prisma.generationHistory.aggregate({
       where: { userId: session.user.id },
       _sum: { tokensUsed: true },
+    });
+
+    // Calculate tokens used this month
+    const startOfMonth = new Date();
+    startOfMonth.setDate(1);
+    startOfMonth.setHours(0, 0, 0, 0);
+
+    const monthlyTokens = await prisma.generationHistory.aggregate({
+      where: {
+        userId: session.user.id,
+        createdAt: { gte: startOfMonth },
+      },
+      _sum: { tokensUsed: true },
+    });
+
+    const monthlyGenerations = await prisma.generationHistory.count({
+      where: {
+        userId: session.user.id,
+        createdAt: { gte: startOfMonth },
+      },
     });
 
     return NextResponse.json({
@@ -56,6 +76,8 @@ export async function GET(request: NextRequest) {
       stats: {
         totalGenerations: total,
         totalTokensUsed: totalTokens._sum.tokensUsed || 0,
+        monthlyGenerations,
+        monthlyTokensUsed: monthlyTokens._sum.tokensUsed || 0,
       },
     });
   } catch (error) {

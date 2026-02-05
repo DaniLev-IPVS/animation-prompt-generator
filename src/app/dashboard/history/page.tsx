@@ -1,7 +1,16 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { History, Loader2, Trash2, ChevronDown, ChevronRight } from 'lucide-react';
+import { History, Loader2, Trash2, ChevronDown, ChevronRight, DollarSign } from 'lucide-react';
+
+// Average cost per million tokens for Claude API (input + output blended)
+const COST_PER_MILLION_TOKENS = 8;
+
+const calculateCost = (tokens: number): string => {
+  const cost = (tokens / 1_000_000) * COST_PER_MILLION_TOKENS;
+  if (cost === 0) return '$0.00';
+  return cost < 0.01 ? '< $0.01' : `$${cost.toFixed(2)}`;
+};
 
 interface HistoryEntry {
   id: string;
@@ -24,6 +33,8 @@ interface HistoryData {
   stats: {
     totalGenerations: number;
     totalTokensUsed: number;
+    monthlyGenerations: number;
+    monthlyTokensUsed: number;
   };
 }
 
@@ -56,7 +67,16 @@ export default function HistoryPage() {
 
     try {
       await fetch('/api/history', { method: 'DELETE' });
-      setData(prev => prev ? { ...prev, history: [], stats: { totalGenerations: 0, totalTokensUsed: 0 } } : null);
+      setData(prev => prev ? {
+        ...prev,
+        history: [],
+        stats: {
+          totalGenerations: 0,
+          totalTokensUsed: 0,
+          monthlyGenerations: 0,
+          monthlyTokensUsed: 0
+        }
+      } : null);
     } catch (error) {
       console.error('Failed to clear history:', error);
     }
@@ -94,7 +114,7 @@ export default function HistoryPage() {
           <h1 className="text-2xl font-bold text-gray-900">Generation History</h1>
           {data && (
             <p className="text-sm text-gray-600 mt-1">
-              {data.stats.totalGenerations} generations - {data.stats.totalTokensUsed.toLocaleString()} tokens used
+              {data.stats.totalGenerations} generations total
             </p>
           )}
         </div>
@@ -108,6 +128,45 @@ export default function HistoryPage() {
           </button>
         )}
       </div>
+
+      {/* Cost Statistics */}
+      {data && (
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+          <div className="bg-white rounded-xl shadow-lg p-4">
+            <div className="flex items-center gap-2 mb-2">
+              <DollarSign className="w-5 h-5 text-purple-600" />
+              <h3 className="font-semibold text-gray-700">All Time</h3>
+            </div>
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <p className="text-2xl font-bold text-gray-900">{data.stats.totalTokensUsed.toLocaleString()}</p>
+                <p className="text-xs text-gray-500">tokens used</p>
+              </div>
+              <div>
+                <p className="text-2xl font-bold text-purple-600">{calculateCost(data.stats.totalTokensUsed)}</p>
+                <p className="text-xs text-gray-500">estimated cost</p>
+              </div>
+            </div>
+          </div>
+          <div className="bg-white rounded-xl shadow-lg p-4">
+            <div className="flex items-center gap-2 mb-2">
+              <DollarSign className="w-5 h-5 text-green-600" />
+              <h3 className="font-semibold text-gray-700">This Month</h3>
+            </div>
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <p className="text-2xl font-bold text-gray-900">{(data.stats.monthlyTokensUsed || 0).toLocaleString()}</p>
+                <p className="text-xs text-gray-500">tokens used</p>
+              </div>
+              <div>
+                <p className="text-2xl font-bold text-green-600">{calculateCost(data.stats.monthlyTokensUsed || 0)}</p>
+                <p className="text-xs text-gray-500">estimated cost</p>
+              </div>
+            </div>
+            <p className="text-xs text-gray-400 mt-2">{data.stats.monthlyGenerations || 0} generations this month</p>
+          </div>
+        </div>
+      )}
 
       {!data || data.history.length === 0 ? (
         <div className="text-center py-16 bg-white rounded-xl shadow-lg">
