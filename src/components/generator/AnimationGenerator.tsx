@@ -2295,7 +2295,7 @@ Create a NEW version of this shot.` }],
                                         </div>
                                       </div>
                                     ) : (
-                                      <div onClick={() => startShotEdit(shot.id, 'dialogue', shot.dialogue)} className={`text-sm p-2 rounded flex items-center gap-2 cursor-pointer hover:ring-2 hover:ring-blue-300 ${shot.dialogue ? 'bg-green-50 text-green-700' : 'bg-theme-tertiary text-theme-muted'}`>
+                                      <div onClick={() => startShotEdit(shot.id, 'dialogue', shot.dialogue)} className={`text-sm p-2 rounded flex items-center gap-2 cursor-pointer hover:ring-2 hover:ring-blue-300 ${shot.dialogue ? 'bg-green-50 text-green-700' : 'bg-theme-tertiary text-theme-muted'}`}>
                                         <span>Dialog:</span><span>{shot.dialogue || 'Click to add'}</span>
                                       </div>
                                     )}
@@ -2309,7 +2309,7 @@ Create a NEW version of this shot.` }],
                                         </div>
                                       </div>
                                     ) : (
-                                      <div onClick={() => startShotEdit(shot.id, 'vo', shot.vo)} className={`text-sm p-2 rounded flex items-center gap-2 cursor-pointer hover:ring-2 hover:ring-blue-300 ${shot.vo ? 'bg-purple-50 text-purple-700' : 'bg-theme-tertiary text-theme-muted'}`>
+                                      <div onClick={() => startShotEdit(shot.id, 'vo', shot.vo)} className={`text-sm p-2 rounded flex items-center gap-2 cursor-pointer hover:ring-2 hover:ring-blue-300 ${shot.vo ? 'bg-purple-50 text-purple-700' : 'bg-theme-tertiary text-theme-muted'}`}>
                                         <span>VO:</span><span>{shot.vo ? cleanNarration(shot.vo) : 'Click to add'}</span>
                                       </div>
                                     )}
@@ -2463,7 +2463,7 @@ Create a NEW version of this shot.` }],
                       <div className="bg-theme-tertiary p-4 rounded">
                         <div className="flex items-center justify-between mb-2">
                           <div className="flex items-center gap-2">
-                            <button onClick={() => toggleComplete('style-3.1')} className={`w-6 h-6 rounded border-2 flex items-center justify-center ${completedPrompts['style-3.1'] ? 'bg-green-500 border-green-500 text-white' : 'border-theme-primary'}`>
+                            <button onClick={() => toggleComplete('style-3.1')} className={`w-6 h-6 rounded border-2 flex items-center justify-center ${completedPrompts['style-3.1'] ? 'bg-green-500 border-green-500 text-white' : 'border-theme-primary'}`}>
                               {completedPrompts['style-3.1'] && <Check className="w-4 h-4" />}
                             </button>
                             <p className="font-semibold text-lg text-purple-800">{projectData.stage3.style}</p>
