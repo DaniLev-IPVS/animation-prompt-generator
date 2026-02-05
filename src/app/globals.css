@@ -7,7 +7,7 @@
 [data-theme="light"] {
   --bg-primary: #F2F0EF;
   --bg-secondary: #FFFFFF;
-  --bg-tertiary: #E8E6E5;
+  --bg-tertiary: #FFFFFF;
   --bg-input: #FFFFFF;
   --border-primary: #D4D2D1;
   --border-secondary: #E8E6E5;
@@ -83,6 +83,98 @@ body {
   .text-theme-muted {
     color: var(--text-muted);
   }
+}
+
+/* Dark mode overrides for colored backgrounds */
+/* These replace bright light backgrounds with dark equivalents */
+[data-theme="dark"] .bg-blue-50 {
+  background-color: #1e3a5f !important;
+}
+[data-theme="dark"] .bg-blue-100 {
+  background-color: #1e3a5f !important;
+}
+[data-theme="dark"] .bg-purple-50 {
+  background-color: #3b1f5e !important;
+}
+[data-theme="dark"] .bg-purple-100 {
+  background-color: #3b1f5e !important;
+}
+[data-theme="dark"] .bg-green-50 {
+  background-color: #1a3d2e !important;
+}
+[data-theme="dark"] .bg-green-100 {
+  background-color: #1a3d2e !important;
+}
+[data-theme="dark"] .bg-amber-50 {
+  background-color: #3d2e1a !important;
+}
+[data-theme="dark"] .bg-amber-100 {
+  background-color: #3d2e1a !important;
+}
+[data-theme="dark"] .bg-emerald-50 {
+  background-color: #1a3d2e !important;
+}
+[data-theme="dark"] .bg-orange-50 {
+  background-color: #3d2a1a !important;
+}
+[data-theme="dark"] .bg-indigo-50 {
+  background-color: #1e2a5f !important;
+}
+[data-theme="dark"] .bg-yellow-50 {
+  background-color: #3d3a1a !important;
+}
+
+/* Dark mode text color overrides for colored text */
+[data-theme="dark"] .text-blue-600,
+[data-theme="dark"] .text-blue-700,
+[data-theme="dark"] .text-blue-800 {
+  color: #93c5fd !important;
+}
+[data-theme="dark"] .text-purple-600,
+[data-theme="dark"] .text-purple-700,
+[data-theme="dark"] .text-purple-800 {
+  color: #c4b5fd !important;
+}
+[data-theme="dark"] .text-green-600,
+[data-theme="dark"] .text-green-700,
+[data-theme="dark"] .text-green-800 {
+  color: #86efac !important;
+}
+[data-theme="dark"] .text-amber-600,
+[data-theme="dark"] .text-amber-700,
+[data-theme="dark"] .text-amber-800 {
+  color: #fcd34d !important;
+}
+[data-theme="dark"] .text-indigo-600,
+[data-theme="dark"] .text-indigo-700,
+[data-theme="dark"] .text-indigo-800 {
+  color: #a5b4fc !important;
+}
+
+/* Dark mode border overrides */
+[data-theme="dark"] .border-blue-200,
+[data-theme="dark"] .border-blue-300 {
+  border-color: #3b82f6 !important;
+}
+[data-theme="dark"] .border-purple-200,
+[data-theme="dark"] .border-purple-300 {
+  border-color: #8b5cf6 !important;
+}
+[data-theme="dark"] .border-green-200,
+[data-theme="dark"] .border-green-300,
+[data-theme="dark"] .border-green-400 {
+  border-color: #22c55e !important;
+}
+[data-theme="dark"] .border-amber-200,
+[data-theme="dark"] .border-amber-300,
+[data-theme="dark"] .border-amber-400 {
+  border-color: #f59e0b !important;
+}
+[data-theme="dark"] .border-indigo-200 {
+  border-color: #6366f1 !important;
+}
+[data-theme="dark"] .border-yellow-200 {
+  border-color: #eab308 !important;
 }
 
 /* Custom scrollbar - theme aware */
