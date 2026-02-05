@@ -8,6 +8,8 @@ const nextConfig = {
     // Ignore TypeScript errors during build
     ignoreBuildErrors: true,
   },
+  // Force clean build
+  cleanDistDir: true,
 };
 
 module.exports = nextConfig;
