@@ -2,19 +2,50 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  --background: #0f0f0f;
-  --foreground: #f5f5f5;
-  --card-bg: #1a1a1a;
-  --card-border: #2a2a2a;
-  --input-bg: #252525;
-  --input-border: #3a3a3a;
+/* Light theme (default) */
+:root,
+[data-theme="light"] {
+  --bg-primary: #F2F0EF;
+  --bg-secondary: #FFFFFF;
+  --bg-tertiary: #E8E6E5;
+  --bg-input: #FFFFFF;
+  --border-primary: #D4D2D1;
+  --border-secondary: #E8E6E5;
+  --text-primary: #1a1a1a;
+  --text-secondary: #4a4a4a;
+  --text-muted: #6a6a6a;
+  --text-inverse: #FFFFFF;
+  --accent-primary: #9333ea;
+  --accent-hover: #7e22ce;
+  --scrollbar-track: #E8E6E5;
+  --scrollbar-thumb: #C4C2C1;
+  --scrollbar-hover: #A4A2A1;
+}
+
+/* Dark theme */
+[data-theme="dark"] {
+  --bg-primary: #343434;
+  --bg-secondary: #2a2a2a;
+  --bg-tertiary: #3d3d3d;
+  --bg-input: #404040;
+  --border-primary: #4a4a4a;
+  --border-secondary: #3d3d3d;
+  --text-primary: #f5f5f5;
+  --text-secondary: #d4d4d4;
+  --text-muted: #a0a0a0;
+  --text-inverse: #1a1a1a;
+  --accent-primary: #a855f7;
+  --accent-hover: #9333ea;
+  --scrollbar-track: #2a2a2a;
+  --scrollbar-thumb: #505050;
+  --scrollbar-hover: #606060;
 }
 
 body {
-  color: var(--foreground);
-  background: var(--background);
+  color: var(--text-primary);
+  background: var(--bg-primary);
   font-family: Arial, Helvetica, sans-serif;
+  transition: background-color 0.2s ease, color 0.2s ease;
 }
 
 @layer utilities {
@@ -23,24 +54,55 @@ body {
   }
 }
 
-/* Custom scrollbar for dark mode */
+/* Theme-aware utility classes */
+@layer components {
+  .bg-theme-primary {
+    background-color: var(--bg-primary);
+  }
+  .bg-theme-secondary {
+    background-color: var(--bg-secondary);
+  }
+  .bg-theme-tertiary {
+    background-color: var(--bg-tertiary);
+  }
+  .bg-theme-input {
+    background-color: var(--bg-input);
+  }
+  .border-theme-primary {
+    border-color: var(--border-primary);
+  }
+  .border-theme-secondary {
+    border-color: var(--border-secondary);
+  }
+  .text-theme-primary {
+    color: var(--text-primary);
+  }
+  .text-theme-secondary {
+    color: var(--text-secondary);
+  }
+  .text-theme-muted {
+    color: var(--text-muted);
+  }
+}
+
+/* Custom scrollbar - theme aware */
 ::-webkit-scrollbar {
   width: 8px;
   height: 8px;
 }
 
 ::-webkit-scrollbar-track {
-  background: #1a1a1a;
+  background: var(--scrollbar-track);
   border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #404040;
+  background: var(--scrollbar-thumb);
   border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #505050;
+  background: var(--scrollbar-hover);
 }
 
 /* Animation for loading spinner */
@@ -52,4 +114,9 @@ body {
 
 .animate-spin {
   animation: spin 1s linear infinite;
+}
+
+/* Logo invert for dark mode only */
+[data-theme="dark"] .logo-auto-invert {
+  filter: invert(1);
 }

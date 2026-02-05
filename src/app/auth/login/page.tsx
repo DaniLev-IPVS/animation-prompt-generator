@@ -41,17 +41,17 @@ export default function LoginPage() {
 
   return (
     <div className="w-full max-w-md">
-      <div className="bg-[#1a1a1a] rounded-2xl border border-[#2a2a2a] p-8">
-        <h1 className="text-2xl font-bold text-white text-center mb-2">
+      <div className="bg-theme-secondary rounded-2xl border border-theme-primary p-8">
+        <h1 className="text-2xl font-bold text-theme-primary text-center mb-2">
           Welcome Back
         </h1>
-        <p className="text-gray-400 text-center mb-8">
+        <p className="text-theme-muted text-center mb-8">
           Sign in to continue creating
         </p>
 
         <form onSubmit={handleSubmit} className="space-y-6">
           {error && (
-            <div className="bg-red-900/30 border border-red-800 text-red-400 p-3 rounded-lg text-sm">
+            <div className="bg-red-500/10 border border-red-500/30 text-red-500 p-3 rounded-lg text-sm">
               {error}
             </div>
           )}
@@ -59,7 +59,7 @@ export default function LoginPage() {
           <div>
             <label
               htmlFor="email"
-              className="block text-sm font-medium text-gray-300 mb-1"
+              className="block text-sm font-medium text-theme-secondary mb-1"
             >
               Email
             </label>
@@ -68,7 +68,7 @@ export default function LoginPage() {
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="w-full px-4 py-3 bg-[#252525] border border-[#3a3a3a] rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none transition-all text-white placeholder-gray-500"
+              className="w-full px-4 py-3 bg-theme-input border border-theme-primary rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none transition-all text-theme-primary placeholder-theme-muted"
               placeholder="you@example.com"
               required
             />
@@ -77,7 +77,7 @@ export default function LoginPage() {
           <div>
             <label
               htmlFor="password"
-              className="block text-sm font-medium text-gray-300 mb-1"
+              className="block text-sm font-medium text-theme-secondary mb-1"
             >
               Password
             </label>
@@ -87,14 +87,14 @@ export default function LoginPage() {
                 type={showPassword ? 'text' : 'password'}
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="w-full px-4 py-3 bg-[#252525] border border-[#3a3a3a] rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none transition-all pr-12 text-white placeholder-gray-500"
+                className="w-full px-4 py-3 bg-theme-input border border-theme-primary rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none transition-all pr-12 text-theme-primary placeholder-theme-muted"
                 placeholder="Enter your password"
                 required
               />
               <button
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-300"
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-theme-muted hover:text-theme-secondary"
               >
                 {showPassword ? (
                   <EyeOff className="w-5 h-5" />
@@ -115,11 +115,11 @@ export default function LoginPage() {
           </button>
         </form>
 
-        <p className="mt-6 text-center text-gray-400">
+        <p className="mt-6 text-center text-theme-muted">
           Don&apos;t have an account?{' '}
           <Link
             href="/auth/register"
-            className="text-purple-400 font-semibold hover:underline"
+            className="text-purple-500 font-semibold hover:underline"
           >
             Sign up
           </Link>

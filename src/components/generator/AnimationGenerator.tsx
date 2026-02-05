@@ -1675,15 +1675,15 @@ Create a NEW version of this shot.` }],
             value={regenInstructions[id] || ''}
             onChange={e => setRegenInstructions(prev => ({ ...prev, [id]: e.target.value }))}
             placeholder="e.g., Make the character older..."
-            className="w-full p-2 text-sm border rounded min-h-[50px] mb-2"
+            className="w-full p-2 text-sm bg-theme-input border border-theme-primary rounded min-h-[50px] mb-2 text-theme-primary"
             autoFocus
           />
           <div className="flex gap-2">
             <button onClick={() => onRegenerate(regenInstructions[id] || '')} className="px-3 py-1 bg-blue-600 text-white text-xs rounded flex items-center gap-1">
               <RefreshCw className="w-3 h-3" />Regenerate
             </button>
-            <button onClick={() => onRegenerate('')} className="px-3 py-1 bg-gray-200 text-gray-700 text-xs rounded">Random</button>
-            <button onClick={() => { setShowRegenInput(null); setRegenInstructions(prev => ({ ...prev, [id]: '' })); }} className="px-3 py-1 bg-gray-100 text-gray-600 text-xs rounded">Cancel</button>
+            <button onClick={() => onRegenerate('')} className="px-3 py-1 bg-theme-tertiary text-theme-secondary text-xs rounded">Random</button>
+            <button onClick={() => { setShowRegenInput(null); setRegenInstructions(prev => ({ ...prev, [id]: '' })); }} className="px-3 py-1 bg-theme-tertiary text-theme-muted text-xs rounded">Cancel</button>
           </div>
         </div>
       );
@@ -1703,17 +1703,17 @@ Create a NEW version of this shot.` }],
     if (isEditing) {
       return (
         <div className="mt-2">
-          <textarea value={editingValue} onChange={e => setEditingValue(e.target.value)} className="w-full p-2 border rounded text-sm font-mono min-h-[100px]" autoFocus />
+          <textarea value={editingValue} onChange={e => setEditingValue(e.target.value)} className="w-full p-2 bg-theme-input border border-theme-primary rounded text-sm font-mono min-h-[100px] text-theme-primary" autoFocus />
           <div className="flex gap-2 mt-2">
             <button onClick={() => saveEdit(type, id, field)} className="px-3 py-1 bg-green-600 text-white text-xs rounded flex items-center gap-1"><Check className="w-3 h-3" />Save</button>
-            <button onClick={cancelEditing} className="px-3 py-1 bg-gray-300 text-gray-700 text-xs rounded flex items-center gap-1"><X className="w-3 h-3" />Cancel</button>
+            <button onClick={cancelEditing} className="px-3 py-1 bg-theme-tertiary text-theme-secondary text-xs rounded flex items-center gap-1"><X className="w-3 h-3" />Cancel</button>
           </div>
         </div>
       );
     }
     return (
       <div className="flex items-start gap-1 mt-1 flex-wrap">
-        <button onClick={() => startEditing(id, value)} className="px-2 py-1 text-xs rounded bg-gray-100 hover:bg-gray-200 flex items-center gap-1"><Edit2 className="w-3 h-3" />Edit</button>
+        <button onClick={() => startEditing(id, value)} className="px-2 py-1 text-xs rounded bg-theme-tertiary hover:bg-theme-tertiary text-theme-secondary flex items-center gap-1"><Edit2 className="w-3 h-3" />Edit</button>
         <RegenButton id={regenId || id} label="Regen" onRegenerate={onRegenerate} />
       </div>
     );
@@ -1730,15 +1730,15 @@ Create a NEW version of this shot.` }],
   return (
     <div className="p-3">
       <div className="max-w-5xl mx-auto">
-        <div className="bg-white rounded-xl shadow-lg p-5">
+        <div className="bg-theme-secondary rounded-xl shadow-lg border border-theme-primary p-5">
           {/* Header */}
           <div className="flex items-center justify-between mb-4 flex-wrap gap-2">
             <div>
-              <h1 className="text-2xl font-bold text-gray-800">Animation Prompt Generator</h1>
+              <h1 className="text-2xl font-bold text-theme-primary">Animation Prompt Generator</h1>
               <p className="text-sm">
                 {isSaving && <span className="text-blue-600">Saving...</span>}
                 {lastSaved && !isSaving && <span className="text-green-600">Saved {lastSaved.toLocaleTimeString()}</span>}
-                {!isSaving && !lastSaved && <span className="text-gray-500">by IP Ventures</span>}
+                {!isSaving && !lastSaved && <span className="text-theme-muted">by IP Ventures</span>}
               </p>
             </div>
             <div className="flex items-center gap-2">
@@ -1753,18 +1753,18 @@ Create a NEW version of this shot.` }],
               <button onClick={() => document.getElementById('header-file-input')?.click()} className="px-3 py-1.5 text-sm bg-blue-100 text-blue-700 rounded-lg hover:bg-blue-200 flex items-center gap-1">
                 <Upload className="w-4 h-4" />Import
               </button>
-              <button onClick={newProject} className="px-3 py-1.5 text-sm bg-gray-100 rounded-lg hover:bg-gray-200 flex items-center gap-1">
+              <button onClick={newProject} className="px-3 py-1.5 text-sm bg-theme-tertiary rounded-lg hover:bg-theme-tertiary flex items-center gap-1">
                 <Plus className="w-4 h-4" />New
               </button>
             </div>
           </div>
 
           {/* Tabs */}
-          <div className="flex items-center gap-4 mb-5 border-b border-gray-200">
-            <button onClick={() => setActiveTab('editor')} className={`px-4 py-2 font-semibold border-b-2 -mb-px ${activeTab === 'editor' ? 'border-purple-600 text-purple-600' : 'border-transparent text-gray-500'}`}>
+          <div className="flex items-center gap-4 mb-5 border-b border-theme-primary">
+            <button onClick={() => setActiveTab('editor')} className={`px-4 py-2 font-semibold border-b-2 -mb-px ${activeTab === 'editor' ? 'border-purple-600 text-purple-600' : 'border-transparent text-theme-muted'}`}>
               Current Project
             </button>
-            <button onClick={() => setActiveTab('projects')} className={`px-4 py-2 font-semibold border-b-2 -mb-px flex items-center gap-2 ${activeTab === 'projects' ? 'border-purple-600 text-purple-600' : 'border-transparent text-gray-500'}`}>
+            <button onClick={() => setActiveTab('projects')} className={`px-4 py-2 font-semibold border-b-2 -mb-px flex items-center gap-2 ${activeTab === 'projects' ? 'border-purple-600 text-purple-600' : 'border-transparent text-theme-muted'}`}>
               <FolderOpen className="w-4 h-4" />
               Saved Projects
             </button>
@@ -1775,7 +1775,7 @@ Create a NEW version of this shot.` }],
             <div className="space-y-4">
               <div className="flex items-center justify-between">
                 <h2 className="text-lg font-semibold">Your Saved Projects</h2>
-                <button onClick={fetchProjects} className="px-3 py-1.5 text-sm bg-gray-100 rounded-lg hover:bg-gray-200 flex items-center gap-1">
+                <button onClick={fetchProjects} className="px-3 py-1.5 text-sm bg-theme-tertiary rounded-lg hover:bg-theme-tertiary flex items-center gap-1">
                   <RefreshCw className={`w-4 h-4 ${isLoadingProjects ? 'animate-spin' : ''}`} />
                   Refresh
                 </button>
@@ -1786,10 +1786,10 @@ Create a NEW version of this shot.` }],
                   <Loader2 className="w-8 h-8 text-purple-600 animate-spin" />
                 </div>
               ) : projectsList.length === 0 ? (
-                <div className="text-center py-8 bg-gray-50 rounded-lg">
-                  <FolderOpen className="w-12 h-12 text-gray-400 mx-auto mb-3" />
-                  <p className="text-gray-500">No saved projects yet.</p>
-                  <p className="text-sm text-gray-400 mt-1">Create a new project or import one to get started.</p>
+                <div className="text-center py-8 bg-theme-tertiary rounded-lg">
+                  <FolderOpen className="w-12 h-12 text-theme-muted mx-auto mb-3" />
+                  <p className="text-theme-muted">No saved projects yet.</p>
+                  <p className="text-sm text-theme-muted mt-1">Create a new project or import one to get started.</p>
                 </div>
               ) : (
                 <div className="space-y-2">
@@ -1799,7 +1799,7 @@ Create a NEW version of this shot.` }],
                       className={`p-4 rounded-lg border transition-all ${
                         currentProjectId === project.id
                           ? 'bg-purple-50 border-purple-300 ring-2 ring-purple-200'
-                          : 'bg-white border-gray-200 hover:border-purple-200'
+                          : 'bg-theme-secondary border-theme-primary hover:border-purple-200'
                       }`}
                     >
                       <div className="flex items-center justify-between gap-4">
@@ -1810,7 +1810,7 @@ Create a NEW version of this shot.` }],
                                 type="text"
                                 value={renameValue}
                                 onChange={e => setRenameValue(e.target.value)}
-                                className="flex-1 px-2 py-1 border rounded text-sm"
+                                className="flex-1 px-2 py-1 bg-theme-input border border-theme-primary rounded text-sm text-theme-primary"
                                 autoFocus
                                 onKeyDown={e => {
                                   if (e.key === 'Enter') saveRename(project.id);
@@ -1820,19 +1820,19 @@ Create a NEW version of this shot.` }],
                               <button onClick={() => saveRename(project.id)} className="px-2 py-1 bg-green-500 text-white text-xs rounded">
                                 <Check className="w-3 h-3" />
                               </button>
-                              <button onClick={() => setRenamingProjectId(null)} className="px-2 py-1 bg-gray-300 text-xs rounded">
+                              <button onClick={() => setRenamingProjectId(null)} className="px-2 py-1 bg-theme-tertiary text-theme-secondary text-xs rounded">
                                 <X className="w-3 h-3" />
                               </button>
                             </div>
                           ) : (
                             <>
                               <div className="flex items-center gap-2">
-                                <h3 className="font-semibold text-gray-800 truncate">{project.name}</h3>
+                                <h3 className="font-semibold text-theme-primary truncate">{project.name}</h3>
                                 {currentProjectId === project.id && (
                                   <span className="text-xs bg-purple-600 text-white px-2 py-0.5 rounded-full">Open</span>
                                 )}
                               </div>
-                              <div className="text-sm text-gray-500 mt-1">
+                              <div className="text-sm text-theme-muted mt-1">
                                 {project.shotCount} shots • {project.sceneCount} scenes • {project.runtime?.toFixed(1) || 0}s
                                 <span className="mx-2">•</span>
                                 Updated {new Date(project.updatedAt).toLocaleDateString()} {new Date(project.updatedAt).toLocaleTimeString()}
@@ -1847,7 +1847,7 @@ Create a NEW version of this shot.` }],
                               onClick={() => openProject(project.id)}
                               className={`px-3 py-1.5 text-sm rounded-lg flex items-center gap-1 ${
                                 currentProjectId === project.id
-                                  ? 'bg-gray-200 text-gray-500 cursor-default'
+                                  ? 'bg-theme-tertiary text-theme-muted cursor-default'
                                   : 'bg-purple-600 text-white hover:bg-purple-700'
                               }`}
                               disabled={currentProjectId === project.id}
@@ -1884,7 +1884,7 @@ Create a NEW version of this shot.` }],
                               className={`px-3 py-1.5 text-sm rounded-lg flex items-center gap-1 ${
                                 project.isPublic
                                   ? 'bg-purple-100 text-purple-700 hover:bg-purple-200'
-                                  : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                                  : 'bg-theme-tertiary text-theme-secondary hover:bg-theme-tertiary'
                               }`}
                               title={project.isPublic ? 'Stop sharing' : 'Share project'}
                             >
@@ -1897,7 +1897,7 @@ Create a NEW version of this shot.` }],
                             </button>
                             <button
                               onClick={() => startRenaming(project)}
-                              className="px-3 py-1.5 text-sm bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 flex items-center gap-1"
+                              className="px-3 py-1.5 text-sm bg-theme-tertiary text-theme-secondary rounded-lg hover:bg-theme-tertiary flex items-center gap-1"
                             >
                               <Edit2 className="w-4 h-4" />
                               Rename
@@ -1928,12 +1928,12 @@ Create a NEW version of this shot.` }],
                     placeholder="Project name"
                     value={projectName}
                     onChange={e => setProjectName(e.target.value)}
-                    className="flex-1 max-w-xs px-3 py-2 border rounded-lg text-sm"
+                    className="flex-1 max-w-xs px-3 py-2 bg-theme-input border border-theme-primary rounded-lg text-sm text-theme-primary"
                   />
                   <button onClick={handleSaveProject} className="px-4 py-2 bg-purple-600 text-white rounded-lg flex items-center gap-2">
                     <Save className="w-4 h-4" />Save
                   </button>
-                  <button onClick={downloadProject} className="px-4 py-2 bg-gray-600 text-white rounded-lg flex items-center gap-2">
+                  <button onClick={downloadProject} className="px-4 py-2 bg-theme-tertiary text-theme-primary rounded-lg flex items-center gap-2 border border-theme-primary">
                     <Download className="w-4 h-4" />Export
                   </button>
                   <input
@@ -1954,12 +1954,12 @@ Create a NEW version of this shot.` }],
                 {stages.map((st, i) => (
                   <div key={i} className="flex items-center flex-1 min-w-0">
                     <div className="flex flex-col items-center">
-                      <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold ${i <= currentStage || (i === 1 && projectData.stage2.length > 0) ? 'bg-purple-600 text-white' : 'bg-gray-200 text-gray-500'}`}>
+                      <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold ${i <= currentStage || (i === 1 && projectData.stage2.length > 0) ? 'bg-purple-600 text-white' : 'bg-theme-tertiary text-theme-muted'}`}>
                         {i + 1}
                       </div>
                       <div className="text-xs text-center mt-1 font-semibold">{st.t}</div>
                     </div>
-                    {i < 7 && <div className={`flex-1 h-1 mx-1 ${i < currentStage ? 'bg-purple-600' : 'bg-gray-200'}`} />}
+                    {i < 7 && <div className={`flex-1 h-1 mx-1 ${i < currentStage ? 'bg-purple-600' : 'bg-theme-tertiary'}`} />}
                   </div>
                 ))}
               </div>
@@ -1997,10 +1997,10 @@ Create a NEW version of this shot.` }],
                   </div>
 
                   <div className="flex gap-2 mb-2">
-                    <button onClick={() => setShowStoryChat(true)} className={`px-4 py-2 rounded-lg text-sm font-medium ${showStoryChat ? 'bg-purple-600 text-white' : 'bg-gray-100 text-gray-700'}`}>
+                    <button onClick={() => setShowStoryChat(true)} className={`px-4 py-2 rounded-lg text-sm font-medium ${showStoryChat ? 'bg-purple-600 text-white' : 'bg-theme-tertiary text-theme-secondary'}`}>
                       <MessageCircle className="w-4 h-4 inline mr-1" />Story Chat
                     </button>
-                    <button onClick={() => setShowStoryChat(false)} className={`px-4 py-2 rounded-lg text-sm font-medium ${!showStoryChat ? 'bg-purple-600 text-white' : 'bg-gray-100 text-gray-700'}`}>
+                    <button onClick={() => setShowStoryChat(false)} className={`px-4 py-2 rounded-lg text-sm font-medium ${!showStoryChat ? 'bg-purple-600 text-white' : 'bg-theme-tertiary text-theme-secondary'}`}>
                       <Edit2 className="w-4 h-4 inline mr-1" />Direct Input
                     </button>
                   </div>
@@ -2025,12 +2025,12 @@ Create a NEW version of this shot.` }],
                         </div>
                       </div>
 
-                      <div className="h-80 overflow-y-auto p-4 space-y-4 bg-gray-50">
+                      <div className="h-80 overflow-y-auto p-4 space-y-4 bg-theme-tertiary">
                         {chatMessages.length === 0 && (
                           <div className="text-center py-8">
                             <div className="w-16 h-16 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-4"><Sparkles className="w-8 h-8 text-purple-600" /></div>
-                            <h4 className="font-semibold text-gray-800 mb-2">Let&apos;s create your story!</h4>
-                            <p className="text-sm text-gray-600 max-w-md mx-auto mb-4">Share your idea and I&apos;ll help develop it.</p>
+                            <h4 className="font-semibold text-theme-primary mb-2">Let&apos;s create your story!</h4>
+                            <p className="text-sm text-theme-secondary max-w-md mx-auto mb-4">Share your idea and I&apos;ll help develop it.</p>
                             <div className="flex flex-wrap gap-2 justify-center">
                               {['A robot learning emotions', 'A chef discovers magic', 'Two friends on adventure'].map((idea, i) => (
                                 <button key={i} onClick={() => setChatInput(idea)} className="px-3 py-1.5 bg-purple-100 text-purple-700 text-sm rounded-full hover:bg-purple-200">{idea}</button>
@@ -2040,14 +2040,14 @@ Create a NEW version of this shot.` }],
                         )}
                         {chatMessages.map((msg, i) => (
                           <div key={i} className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}>
-                            <div className={`max-w-[80%] rounded-2xl px-4 py-3 ${msg.role === 'user' ? 'bg-purple-600 text-white' : 'bg-white border text-gray-800 shadow-sm'}`}>
+                            <div className={`max-w-[80%] rounded-2xl px-4 py-3 ${msg.role === 'user' ? 'bg-purple-600 text-white' : 'bg-theme-secondary border border-theme-primary text-theme-primary shadow-sm'}`}>
                               <p className="text-sm whitespace-pre-wrap">{cleanMarkdown(msg.content)}</p>
                             </div>
                           </div>
                         ))}
                         {isChatting && (
                           <div className="flex justify-start">
-                            <div className="bg-white border rounded-2xl px-4 py-3 shadow-sm">
+                            <div className="bg-theme-secondary border border-theme-primary rounded-2xl px-4 py-3 shadow-sm">
                               <div className="flex gap-1">
                                 <div className="w-2 h-2 bg-purple-400 rounded-full animate-bounce" />
                                 <div className="w-2 h-2 bg-purple-400 rounded-full animate-bounce" style={{ animationDelay: '150ms' }} />
@@ -2059,18 +2059,18 @@ Create a NEW version of this shot.` }],
                         <div ref={chatEndRef} />
                       </div>
 
-                      <div className="border-t bg-white p-4">
+                      <div className="border-t border-theme-primary bg-theme-secondary p-4">
                         <div className="flex gap-3 items-end">
                           <textarea
                             value={chatInput}
                             onChange={e => setChatInput(e.target.value)}
                             onKeyDown={e => { if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) { e.preventDefault(); sendChatMessage(); } }}
                             placeholder="Describe your story idea... (Ctrl+Enter to send)"
-                            className="flex-1 px-4 py-3 border-2 border-gray-200 rounded-xl resize-none min-h-[52px]"
+                            className="flex-1 px-4 py-3 bg-theme-input border-2 border-theme-primary rounded-xl resize-none min-h-[52px] text-theme-primary"
                             disabled={isChatting}
                             rows={1}
                           />
-                          <button onClick={sendChatMessage} disabled={!chatInput.trim() || isChatting} className="px-5 py-3 bg-purple-600 text-white rounded-xl disabled:bg-gray-300 h-[52px]">
+                          <button onClick={sendChatMessage} disabled={!chatInput.trim() || isChatting} className="px-5 py-3 bg-purple-600 text-white rounded-xl disabled:bg-theme-tertiary disabled:text-theme-muted h-[52px]">
                             <Send className="w-5 h-5" />
                           </button>
                         </div>
@@ -2084,38 +2084,38 @@ Create a NEW version of this shot.` }],
                           <button onClick={() => setShowStoryChat(true)} className="px-3 py-1.5 text-sm bg-green-100 text-green-700 rounded-lg flex items-center gap-1"><MessageCircle className="w-4 h-4" />Back to Chat</button>
                         </div>
                         <textarea
-                          className="w-full h-64 p-4 border-2 border-green-200 rounded-lg bg-white"
+                          className="w-full h-64 p-4 border-2 border-green-200 rounded-lg bg-theme-input text-theme-primary"
                           value={scriptInput}
                           onChange={e => setScriptInput(e.target.value)}
                           placeholder="Paste or write your complete story here..."
                         />
                         <div className="flex justify-between items-center mt-2">
-                          <span className="text-xs text-gray-500">{scriptInput.split(/\s+/).filter(w => w).length} words</span>
+                          <span className="text-xs text-theme-muted">{scriptInput.split(/\s+/).filter(w => w).length} words</span>
                           <button onClick={() => setScriptInput(cleanMarkdown(scriptInput))} className="text-xs text-green-600 underline">Clean formatting</button>
                         </div>
                       </div>
 
                       <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
                         <div>
-                          <label className="block text-sm font-medium mb-1">Style</label>
-                          <input type="text" className="w-full p-2 border rounded-lg" placeholder="e.g., Anime" value={configInput.stylePreference} onChange={e => setConfigInput(p => ({ ...p, stylePreference: e.target.value }))} />
+                          <label className="block text-sm font-medium mb-1 text-theme-secondary">Style</label>
+                          <input type="text" className="w-full p-2 bg-theme-input border border-theme-primary rounded-lg text-theme-primary" placeholder="e.g., Anime" value={configInput.stylePreference} onChange={e => setConfigInput(p => ({ ...p, stylePreference: e.target.value }))} />
                         </div>
                         <div>
-                          <label className="block text-sm font-medium mb-1">Duration (seconds)</label>
+                          <label className="block text-sm font-medium mb-1 text-theme-secondary">Duration (seconds)</label>
                           <div className="flex gap-2">
-                            <input type="number" className="w-full p-2 border rounded-lg" placeholder="60" value={configInput.expectedDuration} onChange={e => setConfigInput(p => ({ ...p, expectedDuration: e.target.value, autoDuration: false }))} disabled={configInput.autoDuration} />
-                            <button onClick={() => setConfigInput(p => ({ ...p, autoDuration: !p.autoDuration, expectedDuration: '' }))} className={`px-3 py-2 text-xs rounded-lg whitespace-nowrap ${configInput.autoDuration ? 'bg-purple-600 text-white' : 'bg-gray-100'}`}>Auto</button>
+                            <input type="number" className="w-full p-2 bg-theme-input border border-theme-primary rounded-lg text-theme-primary" placeholder="60" value={configInput.expectedDuration} onChange={e => setConfigInput(p => ({ ...p, expectedDuration: e.target.value, autoDuration: false }))} disabled={configInput.autoDuration} />
+                            <button onClick={() => setConfigInput(p => ({ ...p, autoDuration: !p.autoDuration, expectedDuration: '' }))} className={`px-3 py-2 text-xs rounded-lg whitespace-nowrap ${configInput.autoDuration ? 'bg-purple-600 text-white' : 'bg-theme-tertiary text-theme-secondary'}`}>Auto</button>
                           </div>
                         </div>
                         <div>
-                          <label className="block text-sm font-medium mb-1">Audio</label>
-                          <select className="w-full p-2 border rounded-lg" value={configInput.audioType} onChange={e => setConfigInput(p => ({ ...p, audioType: e.target.value }))}>
+                          <label className="block text-sm font-medium mb-1 text-theme-secondary">Audio</label>
+                          <select className="w-full p-2 bg-theme-input border border-theme-primary rounded-lg text-theme-primary" value={configInput.audioType} onChange={e => setConfigInput(p => ({ ...p, audioType: e.target.value }))}>
                             <option value="auto">Auto</option><option value="none">None</option><option value="narration">Narration</option><option value="dialogue">Dialogue</option><option value="both">Both</option>
                           </select>
                         </div>
                         <div>
-                          <label className="block text-sm font-medium mb-1">Aspect Ratio</label>
-                          <select className="w-full p-2 border rounded-lg" value={configInput.aspectRatio} onChange={e => setConfigInput(p => ({ ...p, aspectRatio: e.target.value }))}>
+                          <label className="block text-sm font-medium mb-1 text-theme-secondary">Aspect Ratio</label>
+                          <select className="w-full p-2 bg-theme-input border border-theme-primary rounded-lg text-theme-primary" value={configInput.aspectRatio} onChange={e => setConfigInput(p => ({ ...p, aspectRatio: e.target.value }))}>
                             <option value="16:9">16:9</option><option value="9:16">9:16</option><option value="1:1">1:1</option>
                           </select>
                         </div>
@@ -2127,16 +2127,16 @@ Create a NEW version of this shot.` }],
                           <h4 className="text-sm font-semibold text-purple-800 mb-2">Narration Settings</h4>
                           <div className="grid grid-cols-2 gap-3">
                             <div>
-                              <label className="block text-xs font-medium mb-1">Narration Pace</label>
-                              <select className="w-full p-2 border rounded-lg text-sm" value={configInput.narrationPace} onChange={e => setConfigInput(p => ({ ...p, narrationPace: e.target.value }))}>
+                              <label className="block text-xs font-medium mb-1 text-theme-secondary">Narration Pace</label>
+                              <select className="w-full p-2 bg-theme-input border border-theme-primary rounded-lg text-sm text-theme-primary" value={configInput.narrationPace} onChange={e => setConfigInput(p => ({ ...p, narrationPace: e.target.value }))}>
                                 <option value="slow">Slow (contemplative, dramatic pauses)</option>
                                 <option value="normal">Normal (natural reading pace)</option>
                                 <option value="fast">Fast (energetic, quick delivery)</option>
                               </select>
                             </div>
                             <div>
-                              <label className="block text-xs font-medium mb-1">Narration Complexity</label>
-                              <select className="w-full p-2 border rounded-lg text-sm" value={configInput.narrationComplexity || 'standard'} onChange={e => setConfigInput(p => ({ ...p, narrationComplexity: e.target.value }))}>
+                              <label className="block text-xs font-medium mb-1 text-theme-secondary">Narration Complexity</label>
+                              <select className="w-full p-2 bg-theme-input border border-theme-primary rounded-lg text-sm text-theme-primary" value={configInput.narrationComplexity || 'standard'} onChange={e => setConfigInput(p => ({ ...p, narrationComplexity: e.target.value }))}>
                                 <option value="simple">Simple (easy to understand)</option>
                                 <option value="standard">Standard (general audience)</option>
                                 <option value="advanced">Advanced (sophisticated vocabulary)</option>
@@ -2152,16 +2152,16 @@ Create a NEW version of this shot.` }],
                           <h4 className="text-sm font-semibold text-green-800 mb-2">Dialogue Settings</h4>
                           <div className="grid grid-cols-2 gap-3">
                             <div>
-                              <label className="block text-xs font-medium mb-1">Dialogue Amount</label>
-                              <select className="w-full p-2 border rounded-lg text-sm" value={configInput.dialogueIntensity} onChange={e => setConfigInput(p => ({ ...p, dialogueIntensity: e.target.value }))}>
+                              <label className="block text-xs font-medium mb-1 text-theme-secondary">Dialogue Amount</label>
+                              <select className="w-full p-2 bg-theme-input border border-theme-primary rounded-lg text-sm text-theme-primary" value={configInput.dialogueIntensity} onChange={e => setConfigInput(p => ({ ...p, dialogueIntensity: e.target.value }))}>
                                 <option value="minimal">Minimal (sparse, impactful lines)</option>
                                 <option value="medium">Medium (balanced conversation)</option>
                                 <option value="heavy">Heavy (lots of dialogue)</option>
                               </select>
                             </div>
                             <div>
-                              <label className="block text-xs font-medium mb-1">Dialogue Complexity</label>
-                              <select className="w-full p-2 border rounded-lg text-sm" value={configInput.dialogueComplexity || 'standard'} onChange={e => setConfigInput(p => ({ ...p, dialogueComplexity: e.target.value }))}>
+                              <label className="block text-xs font-medium mb-1 text-theme-secondary">Dialogue Complexity</label>
+                              <select className="w-full p-2 bg-theme-input border border-theme-primary rounded-lg text-sm text-theme-primary" value={configInput.dialogueComplexity || 'standard'} onChange={e => setConfigInput(p => ({ ...p, dialogueComplexity: e.target.value }))}>
                                 <option value="simple">Simple (casual, everyday speech)</option>
                                 <option value="standard">Standard (natural conversation)</option>
                                 <option value="advanced">Advanced (eloquent, complex)</option>
@@ -2174,7 +2174,7 @@ Create a NEW version of this shot.` }],
                       <button
                         onClick={generateStage2}
                         disabled={!scriptInput.trim() || isGenerating || (!configInput.autoDuration && !configInput.expectedDuration)}
-                        className="w-full px-6 py-4 bg-gradient-to-r from-purple-600 to-indigo-600 text-white rounded-xl text-lg font-bold disabled:from-gray-300 disabled:to-gray-300 flex items-center justify-center gap-2"
+                        className="w-full px-6 py-4 bg-gradient-to-r from-purple-600 to-indigo-600 text-white rounded-xl text-lg font-bold disabled:from-gray-400 disabled:to-gray-400 flex items-center justify-center gap-2"
                       >
                         {isGenerating ? (
                           <><Loader2 className="w-5 h-5 animate-spin" />{generationProgress.stage || 'Processing...'}</>
@@ -2189,9 +2189,9 @@ Create a NEW version of this shot.` }],
 
               {/* Stage 2: Shots */}
               {projectData.stage2.length > 0 && (
-                <div className="mb-5 border rounded-lg p-4">
+                <div className="mb-5 border border-theme-primary rounded-lg p-4 bg-theme-secondary">
                   <div className="flex items-center justify-between mb-3 cursor-pointer" onClick={() => toggleSection('stage2')}>
-                    <h2 className="text-lg font-semibold">Stage 2: Shot List ({totalScenes} scenes, {projectData.stage2.length} shots, {totalRuntime.toFixed(1)}s)</h2>
+                    <h2 className="text-lg font-semibold text-theme-primary">Stage 2: Shot List ({totalScenes} scenes, {projectData.stage2.length} shots, {totalRuntime.toFixed(1)}s)</h2>
                     {expandedSections.stage2 ? <ChevronDown className="w-5 h-5" /> : <ChevronRight className="w-5 h-5" />}
                   </div>
                   {expandedSections.stage2 && (
@@ -2200,9 +2200,9 @@ Create a NEW version of this shot.` }],
                         <div className="flex items-center justify-between flex-wrap gap-2">
                           <div>
                             <span className="font-semibold">Total: {totalRuntime.toFixed(1)}s</span>
-                            <span className="text-sm text-gray-600 ml-2">/ Target: {projectData.metadata?.targetDuration || 60}s</span>
+                            <span className="text-sm text-theme-muted ml-2">/ Target: {projectData.metadata?.targetDuration || 60}s</span>
                           </div>
-                          <span className="text-sm text-gray-600">{projectData.stage2.length} shots (~{(totalRuntime / projectData.stage2.length).toFixed(1)}s avg)</span>
+                          <span className="text-sm text-theme-muted">{projectData.stage2.length} shots (~{(totalRuntime / projectData.stage2.length).toFixed(1)}s avg)</span>
                         </div>
                       </div>
 
@@ -2238,21 +2238,21 @@ Create a NEW version of this shot.` }],
 
                             <div className="space-y-2 mt-2">
                               {sceneShots.map(shot => (
-                                <div key={shot.id} id={`shot-${shot.scene}-${shot.shotNumber}`} className={`bg-gray-50 p-3 rounded border-l-4 transition-all ${isMontageScene ? 'border-pink-400' : 'border-purple-500'}`}>
+                                <div key={shot.id} id={`shot-${shot.scene}-${shot.shotNumber}`} className={`bg-theme-tertiary p-3 rounded border-l-4 transition-all ${isMontageScene ? 'border-pink-400' : 'border-purple-500'}`}>
                                   <div className="flex items-center gap-2 mb-2 flex-wrap">
                                     <span className="font-mono text-sm text-purple-600 font-bold">SHOT {shot.shotNumber}</span>
-                                    <button onClick={() => hasStage7ForShot(shot.scene, shot.shotNumber) && scrollToRef(`frame-${shot.scene}-${shot.shotNumber}`)} className={`font-mono text-xs px-1.5 py-0.5 rounded ${hasStage7ForShot(shot.scene, shot.shotNumber) ? 'bg-indigo-100 text-indigo-700 hover:bg-indigo-200 cursor-pointer' : 'bg-gray-100 text-gray-400 cursor-not-allowed'}`}>
+                                    <button onClick={() => hasStage7ForShot(shot.scene, shot.shotNumber) && scrollToRef(`frame-${shot.scene}-${shot.shotNumber}`)} className={`font-mono text-xs px-1.5 py-0.5 rounded ${hasStage7ForShot(shot.scene, shot.shotNumber) ? 'bg-indigo-100 text-indigo-700 hover:bg-indigo-200 cursor-pointer' : 'bg-theme-tertiary text-theme-muted cursor-not-allowed'}`}>
                                       7.{shot.scene}.{shot.shotNumber}
                                     </button>
-                                    <button onClick={() => hasStage8ForShot(shot.scene, shot.shotNumber) && scrollToRef(`anim-${shot.scene}-${shot.shotNumber}`)} className={`font-mono text-xs px-1.5 py-0.5 rounded ${hasStage8ForShot(shot.scene, shot.shotNumber) ? 'bg-purple-100 text-purple-700 hover:bg-purple-200 cursor-pointer' : 'bg-gray-100 text-gray-400 cursor-not-allowed'}`}>
+                                    <button onClick={() => hasStage8ForShot(shot.scene, shot.shotNumber) && scrollToRef(`anim-${shot.scene}-${shot.shotNumber}`)} className={`font-mono text-xs px-1.5 py-0.5 rounded ${hasStage8ForShot(shot.scene, shot.shotNumber) ? 'bg-purple-100 text-purple-700 hover:bg-purple-200 cursor-pointer' : 'bg-theme-tertiary text-theme-muted cursor-not-allowed'}`}>
                                       8.{shot.scene}.{shot.shotNumber}
                                     </button>
 
                                     {editingShotField === `${shot.id}-timing` ? (
                                       <div className="flex items-center gap-1">
-                                        <input type="number" step="0.1" value={editingShotValue} onChange={e => setEditingShotValue(e.target.value)} className="w-16 px-1 py-0.5 text-xs border rounded" autoFocus />
+                                        <input type="number" step="0.1" value={editingShotValue} onChange={e => setEditingShotValue(e.target.value)} className="w-16 px-1 py-0.5 text-xs bg-theme-input border border-theme-primary rounded text-theme-primary" autoFocus />
                                         <button onClick={() => saveShotEdit(shot.id, 'timing')} className="p-0.5 bg-green-500 text-white rounded"><Check className="w-3 h-3" /></button>
-                                        <button onClick={cancelShotEdit} className="p-0.5 bg-gray-300 rounded"><X className="w-3 h-3" /></button>
+                                        <button onClick={cancelShotEdit} className="p-0.5 bg-theme-tertiary text-theme-secondary rounded"><X className="w-3 h-3" /></button>
                                       </div>
                                     ) : (
                                       <span onClick={() => startShotEdit(shot.id, 'timing', shot.timing)} className={`text-xs px-2 py-0.5 rounded cursor-pointer hover:ring-2 hover:ring-blue-300 ${shot.timing <= 0.5 ? 'bg-pink-100 text-pink-700' : 'bg-orange-100 text-orange-700'}`}>{shot.timing}s</span>
@@ -2260,11 +2260,11 @@ Create a NEW version of this shot.` }],
 
                                     {editingShotField === `${shot.id}-framing` ? (
                                       <div className="flex items-center gap-1">
-                                        <select value={editingShotValue} onChange={e => setEditingShotValue(e.target.value)} className="px-1 py-0.5 text-xs border rounded" autoFocus>
+                                        <select value={editingShotValue} onChange={e => setEditingShotValue(e.target.value)} className="px-1 py-0.5 text-xs bg-theme-input border border-theme-primary rounded text-theme-primary" autoFocus>
                                           {['ECU', 'CU', 'MCU', 'MS', 'MWS', 'WS', 'EWS', 'OTS', 'POV', 'TWO-SHOT'].map(f => <option key={f} value={f}>{f}</option>)}
                                         </select>
                                         <button onClick={() => saveShotEdit(shot.id, 'framing')} className="p-0.5 bg-green-500 text-white rounded"><Check className="w-3 h-3" /></button>
-                                        <button onClick={cancelShotEdit} className="p-0.5 bg-gray-300 rounded"><X className="w-3 h-3" /></button>
+                                        <button onClick={cancelShotEdit} className="p-0.5 bg-theme-tertiary text-theme-secondary rounded"><X className="w-3 h-3" /></button>
                                       </div>
                                     ) : (
                                       shot.framing && <span onClick={() => startShotEdit(shot.id, 'framing', shot.framing)} className="text-xs bg-indigo-100 text-indigo-700 px-2 py-0.5 rounded cursor-pointer hover:ring-2 hover:ring-blue-300">{shot.framing}</span>
@@ -2275,48 +2275,48 @@ Create a NEW version of this shot.` }],
 
                                   {editingShotField === `${shot.id}-description` ? (
                                     <div className="mb-2">
-                                      <textarea value={editingShotValue} onChange={e => setEditingShotValue(e.target.value)} className="w-full p-2 text-sm border rounded min-h-[60px]" autoFocus />
+                                      <textarea value={editingShotValue} onChange={e => setEditingShotValue(e.target.value)} className="w-full p-2 text-sm bg-theme-input border border-theme-primary rounded min-h-[60px] text-theme-primary" autoFocus />
                                       <div className="flex gap-1 mt-1">
                                         <button onClick={() => saveShotEdit(shot.id, 'description')} className="px-2 py-1 bg-green-500 text-white text-xs rounded flex items-center gap-1"><Check className="w-3 h-3" />Save</button>
-                                        <button onClick={cancelShotEdit} className="px-2 py-1 bg-gray-300 text-xs rounded flex items-center gap-1"><X className="w-3 h-3" />Cancel</button>
+                                        <button onClick={cancelShotEdit} className="px-2 py-1 bg-theme-tertiary text-theme-secondary text-xs rounded flex items-center gap-1"><X className="w-3 h-3" />Cancel</button>
                                       </div>
                                     </div>
                                   ) : (
-                                    <p onClick={() => startShotEdit(shot.id, 'description', shot.description)} className="text-sm text-gray-700 cursor-pointer hover:bg-yellow-50 p-1 rounded">{shot.description}</p>
+                                    <p onClick={() => startShotEdit(shot.id, 'description', shot.description)} className="text-sm text-theme-secondary cursor-pointer hover:bg-yellow-50 p-1 rounded">{shot.description}</p>
                                   )}
 
                                   <div className="mt-2 space-y-2">
                                     {editingShotField === `${shot.id}-dialogue` ? (
                                       <div>
-                                        <textarea value={editingShotValue} onChange={e => setEditingShotValue(e.target.value)} className="w-full p-2 text-sm border rounded min-h-[40px]" placeholder="CHARACTER: [emotion] 'Dialogue text'" autoFocus />
+                                        <textarea value={editingShotValue} onChange={e => setEditingShotValue(e.target.value)} className="w-full p-2 text-sm bg-theme-input border border-theme-primary rounded min-h-[40px] text-theme-primary" placeholder="CHARACTER: [emotion] 'Dialogue text'" autoFocus />
                                         <div className="flex gap-1 mt-1">
                                           <button onClick={() => saveShotEdit(shot.id, 'dialogue')} className="px-2 py-1 bg-green-500 text-white text-xs rounded"><Check className="w-3 h-3" /></button>
-                                          <button onClick={cancelShotEdit} className="px-2 py-1 bg-gray-300 text-xs rounded"><X className="w-3 h-3" /></button>
+                                          <button onClick={cancelShotEdit} className="px-2 py-1 bg-theme-tertiary text-theme-secondary text-xs rounded"><X className="w-3 h-3" /></button>
                                         </div>
                                       </div>
                                     ) : (
-                                      <div onClick={() => startShotEdit(shot.id, 'dialogue', shot.dialogue)} className={`text-sm p-2 rounded flex items-center gap-2 cursor-pointer hover:ring-2 hover:ring-blue-300 ${shot.dialogue ? 'bg-green-50 text-green-700' : 'bg-gray-100 text-gray-400'}`}>
+                                      <div onClick={() => startShotEdit(shot.id, 'dialogue', shot.dialogue)} className={`text-sm p-2 rounded flex items-center gap-2 cursor-pointer hover:ring-2 hover:ring-blue-300 ${shot.dialogue ? 'bg-green-50 text-green-700' : 'bg-theme-tertiary text-theme-muted'}`>
                                         <span>Dialog:</span><span>{shot.dialogue || 'Click to add'}</span>
                                       </div>
                                     )}
 
                                     {editingShotField === `${shot.id}-vo` ? (
                                       <div>
-                                        <textarea value={editingShotValue} onChange={e => setEditingShotValue(e.target.value)} className="w-full p-2 text-sm border rounded min-h-[40px]" placeholder="[emotion] Narration text" autoFocus />
+                                        <textarea value={editingShotValue} onChange={e => setEditingShotValue(e.target.value)} className="w-full p-2 text-sm bg-theme-input border border-theme-primary rounded min-h-[40px] text-theme-primary" placeholder="[emotion] Narration text" autoFocus />
                                         <div className="flex gap-1 mt-1">
                                           <button onClick={() => saveShotEdit(shot.id, 'vo')} className="px-2 py-1 bg-green-500 text-white text-xs rounded"><Check className="w-3 h-3" /></button>
-                                          <button onClick={cancelShotEdit} className="px-2 py-1 bg-gray-300 text-xs rounded"><X className="w-3 h-3" /></button>
+                                          <button onClick={cancelShotEdit} className="px-2 py-1 bg-theme-tertiary text-theme-secondary text-xs rounded"><X className="w-3 h-3" /></button>
                                         </div>
                                       </div>
                                     ) : (
-                                      <div onClick={() => startShotEdit(shot.id, 'vo', shot.vo)} className={`text-sm p-2 rounded flex items-center gap-2 cursor-pointer hover:ring-2 hover:ring-blue-300 ${shot.vo ? 'bg-purple-50 text-purple-700' : 'bg-gray-100 text-gray-400'}`}>
+                                      <div onClick={() => startShotEdit(shot.id, 'vo', shot.vo)} className={`text-sm p-2 rounded flex items-center gap-2 cursor-pointer hover:ring-2 hover:ring-blue-300 ${shot.vo ? 'bg-purple-50 text-purple-700' : 'bg-theme-tertiary text-theme-muted'}`>
                                         <span>VO:</span><span>{shot.vo ? cleanNarration(shot.vo) : 'Click to add'}</span>
                                       </div>
                                     )}
                                   </div>
 
                                   {/* Regenerate Shot Button */}
-                                  <div className="mt-3 pt-2 border-t border-gray-200">
+                                  <div className="mt-3 pt-2 border-t border-theme-primary">
                                     <RegenButton
                                       id={`shot-${shot.scene}-${shot.shotNumber}`}
                                       label="Regenerate Shot"
@@ -2401,7 +2401,7 @@ Create a NEW version of this shot.` }],
                                     {copiedId === 'audio-summary-narration' ? <><Check className="w-3 h-3" />Copied!</> : <><Copy className="w-3 h-3" />Copy Narration</>}
                                   </button>
                                 </div>
-                                <div className="bg-white rounded border p-3 max-h-40 overflow-y-auto text-sm space-y-1">
+                                <div className="bg-theme-secondary rounded border border-theme-primary p-3 max-h-40 overflow-y-auto text-sm space-y-1">
                                   {sceneVOs.map((v, i) => (
                                     <div key={`scene-vo-${i}`} className="text-purple-800">
                                       <span className="font-mono text-xs bg-purple-100 px-1 rounded mr-2">Scene {v.scene}</span>
@@ -2429,7 +2429,7 @@ Create a NEW version of this shot.` }],
                                     {copiedId === 'audio-summary-dialogue' ? <><Check className="w-3 h-3" />Copied!</> : <><Copy className="w-3 h-3" />Copy Dialogue</>}
                                   </button>
                                 </div>
-                                <div className="bg-white rounded border p-3 max-h-40 overflow-y-auto text-sm space-y-1">
+                                <div className="bg-theme-secondary rounded border border-theme-primary p-3 max-h-40 overflow-y-auto text-sm space-y-1">
                                   {allDialogue.map((d, i) => (
                                     <div key={`dialogue-${i}`}>
                                       <span className="font-mono text-xs bg-green-100 px-1 rounded mr-2">S{d.scene}.{d.shot}</span>
@@ -2443,7 +2443,7 @@ Create a NEW version of this shot.` }],
                         );
                       })()}
 
-                      <button onClick={generateStage3} disabled={isGenerating} className="mt-4 px-5 py-2 bg-purple-600 text-white rounded-lg flex items-center gap-2 disabled:bg-gray-300">
+                      <button onClick={generateStage3} disabled={isGenerating} className="mt-4 px-5 py-2 bg-purple-600 text-white rounded-lg flex items-center gap-2 disabled:bg-theme-tertiary disabled:text-theme-muted">
                         {isGenerating ? <><Loader2 className="w-4 h-4 animate-spin" />Processing...</> : <>Generate Art Style</>}
                       </button>
                     </>
@@ -2453,17 +2453,17 @@ Create a NEW version of this shot.` }],
 
               {/* Stage 3: Style */}
               {projectData.stage3?.style && (
-                <div className="mb-5 border rounded-lg p-4">
+                <div className="mb-5 border border-theme-primary rounded-lg p-4 bg-theme-secondary">
                   <div className="flex items-center justify-between mb-3 cursor-pointer" onClick={() => toggleSection('stage3')}>
-                    <h2 className="text-lg font-semibold">Stage 3: Art Style</h2>
+                    <h2 className="text-lg font-semibold text-theme-primary">Stage 3: Art Style</h2>
                     {expandedSections.stage3 ? <ChevronDown className="w-5 h-5" /> : <ChevronRight className="w-5 h-5" />}
                   </div>
                   {expandedSections.stage3 && (
                     <>
-                      <div className="bg-gray-50 p-4 rounded">
+                      <div className="bg-theme-tertiary p-4 rounded">
                         <div className="flex items-center justify-between mb-2">
                           <div className="flex items-center gap-2">
-                            <button onClick={() => toggleComplete('style-3.1')} className={`w-6 h-6 rounded border-2 flex items-center justify-center ${completedPrompts['style-3.1'] ? 'bg-green-500 border-green-500 text-white' : 'border-gray-300'}`}>
+                            <button onClick={() => toggleComplete('style-3.1')} className={`w-6 h-6 rounded border-2 flex items-center justify-center ${completedPrompts['style-3.1'] ? 'bg-green-500 border-green-500 text-white' : 'border-theme-primary'}`>
                               {completedPrompts['style-3.1'] && <Check className="w-4 h-4" />}
                             </button>
                             <p className="font-semibold text-lg text-purple-800">{projectData.stage3.style}</p>
@@ -2472,10 +2472,10 @@ Create a NEW version of this shot.` }],
                             {copiedId === '3.1' ? <><Check className="w-4 h-4" />Copied!</> : <><Copy className="w-4 h-4" />Copy</>}
                           </button>
                         </div>
-                        <p className="text-sm text-gray-600 font-mono bg-white p-3 rounded border">{projectData.stage3.aiGenerationPrompt}</p>
+                        <p className="text-sm text-theme-secondary font-mono bg-theme-secondary p-3 rounded border border-theme-primary">{projectData.stage3.aiGenerationPrompt}</p>
                         <PromptEditor id="style" value={projectData.stage3.aiGenerationPrompt} type="style" onRegenerate={(instr) => regenerateStyle(instr)} regenId="style" />
                       </div>
-                      <button onClick={generateStage4} disabled={isGenerating} className="mt-4 px-5 py-2 bg-purple-600 text-white rounded-lg flex items-center gap-2 disabled:bg-gray-300">
+                      <button onClick={generateStage4} disabled={isGenerating} className="mt-4 px-5 py-2 bg-purple-600 text-white rounded-lg flex items-center gap-2 disabled:bg-theme-tertiary disabled:text-theme-muted">
                         {isGenerating ? <><Loader2 className="w-4 h-4 animate-spin" />Processing...</> : <>Generate Characters</>}
                       </button>
                     </>
@@ -2485,10 +2485,10 @@ Create a NEW version of this shot.` }],
 
               {/* Stage 4: Characters */}
               {projectData.stage4?.length > 0 && (
-                <div className="mb-5 border rounded-lg p-4">
+                <div className="mb-5 border border-theme-primary rounded-lg p-4 bg-theme-secondary">
                   <div className="flex items-center justify-between mb-3">
                     <div className="flex items-center gap-2 cursor-pointer" onClick={() => toggleSection('stage4')}>
-                      <h2 className="text-lg font-semibold">Stage 4: Characters ({projectData.stage4.length})</h2>
+                      <h2 className="text-lg font-semibold text-theme-primary">Stage 4: Characters ({projectData.stage4.length})</h2>
                       {expandedSections.stage4 ? <ChevronDown className="w-5 h-5" /> : <ChevronRight className="w-5 h-5" />}
                     </div>
                     <button
@@ -2506,17 +2506,17 @@ Create a NEW version of this shot.` }],
                         {projectData.stage4.map(c => {
                           const shotRefs = getShotsForCharacter(c.name);
                           return (
-                            <div key={c.id} id={`char-${c.id}`} className={`p-4 rounded border transition-all ${completedPrompts[c.id] ? 'bg-green-50 border-green-300' : 'bg-gray-50'}`}>
+                            <div key={c.id} id={`char-${c.id}`} className={`p-4 rounded border transition-all ${completedPrompts[c.id] ? 'bg-green-50 border-green-300' : 'bg-theme-tertiary border-theme-primary'}`}>
                               <div className="flex items-center justify-between mb-2">
                                 <div className="flex items-center gap-2 flex-wrap">
-                                  <button onClick={() => toggleComplete(c.id)} className={`w-6 h-6 rounded border-2 flex items-center justify-center ${completedPrompts[c.id] ? 'bg-green-500 border-green-500 text-white' : 'border-gray-300'}`}>
+                                  <button onClick={() => toggleComplete(c.id)} className={`w-6 h-6 rounded border-2 flex items-center justify-center ${completedPrompts[c.id] ? 'bg-green-500 border-green-500 text-white' : 'border-theme-primary'}`}>
                                     {completedPrompts[c.id] && <Check className="w-4 h-4" />}
                                   </button>
                                   <p className="font-semibold text-purple-700">{getCleanName(c.name)}</p>
                                   {getRoleBadge(c.name)}
                                 </div>
                                 <div className="flex items-center gap-1">
-                                  <button onClick={() => copyToClipboard(c.visualPrompt, `${c.id}-solo`)} className={`px-2 py-1 text-xs rounded-lg ${copiedId === `${c.id}-solo` ? 'bg-green-600 text-white' : 'bg-gray-200'}`}>
+                                  <button onClick={() => copyToClipboard(c.visualPrompt, `${c.id}-solo`)} className={`px-2 py-1 text-xs rounded-lg ${copiedId === `${c.id}-solo` ? 'bg-green-600 text-white' : 'bg-theme-tertiary text-theme-secondary'}`}>
                                     {copiedId === `${c.id}-solo` ? <Check className="w-3 h-3" /> : <Copy className="w-3 h-3" />}
                                   </button>
                                   <button onClick={() => copyWithStyle(c.visualPrompt, c.id)} className={`px-2 py-1 text-xs rounded-lg ${copiedId === c.id ? 'bg-green-600 text-white' : 'bg-purple-600 text-white'}`}>
@@ -2526,35 +2526,35 @@ Create a NEW version of this shot.` }],
                               </div>
                               {shotRefs.length > 0 && (
                                 <div className="flex flex-wrap gap-1 mb-2">
-                                  <span className="text-xs text-gray-500">Frames:</span>
+                                  <span className="text-xs text-theme-muted">Frames:</span>
                                   {shotRefs.map((ref, i) => (
                                     <button
                                       key={`7-${i}`}
                                       onClick={() => ref.hasStage7 && scrollToRef(`frame-${ref.scene}-${ref.shot}`)}
-                                      className={`text-xs px-1.5 py-0.5 rounded ${ref.hasStage7 ? 'bg-indigo-100 text-indigo-700 hover:bg-indigo-200 cursor-pointer' : 'bg-gray-100 text-gray-400 cursor-not-allowed'}`}
+                                      className={`text-xs px-1.5 py-0.5 rounded ${ref.hasStage7 ? 'bg-indigo-100 text-indigo-700 hover:bg-indigo-200 cursor-pointer' : 'bg-theme-tertiary text-theme-muted cursor-not-allowed'}`}
                                     >
                                       7.{ref.scene}.{ref.shot}
                                     </button>
                                   ))}
-                                  <span className="text-xs text-gray-500 ml-2">Animation:</span>
+                                  <span className="text-xs text-theme-muted ml-2">Animation:</span>
                                   {shotRefs.map((ref, i) => (
                                     <button
                                       key={`8-${i}`}
                                       onClick={() => ref.hasStage8 && scrollToRef(`anim-${ref.scene}-${ref.shot}`)}
-                                      className={`text-xs px-1.5 py-0.5 rounded ${ref.hasStage8 ? 'bg-purple-100 text-purple-700 hover:bg-purple-200 cursor-pointer' : 'bg-gray-100 text-gray-400 cursor-not-allowed'}`}
+                                      className={`text-xs px-1.5 py-0.5 rounded ${ref.hasStage8 ? 'bg-purple-100 text-purple-700 hover:bg-purple-200 cursor-pointer' : 'bg-theme-tertiary text-theme-muted cursor-not-allowed'}`}
                                     >
                                       8.{ref.scene}.{ref.shot}
                                     </button>
                                   ))}
                                 </div>
                               )}
-                              <p className="text-sm text-gray-600 font-mono bg-white p-2 rounded border">{c.visualPrompt}</p>
+                              <p className="text-sm text-theme-secondary font-mono bg-theme-secondary p-2 rounded border border-theme-primary">{c.visualPrompt}</p>
                               <PromptEditor id={c.id} value={c.visualPrompt} type="character" onRegenerate={(instr) => regenerateCharacter(c, instr)} regenId={c.id} />
                             </div>
                           );
                         })}
                       </div>
-                      <button onClick={generateStage5} disabled={isGenerating} className="mt-4 px-5 py-2 bg-purple-600 text-white rounded-lg flex items-center gap-2 disabled:bg-gray-300">
+                      <button onClick={generateStage5} disabled={isGenerating} className="mt-4 px-5 py-2 bg-purple-600 text-white rounded-lg flex items-center gap-2 disabled:bg-theme-tertiary disabled:text-theme-muted">
                         {isGenerating ? <><Loader2 className="w-4 h-4 animate-spin" />Processing...</> : <>Generate Backgrounds</>}
                       </button>
                     </>
@@ -2564,10 +2564,10 @@ Create a NEW version of this shot.` }],
 
               {/* Stage 5: Backgrounds */}
               {projectData.stage5?.length > 0 && (
-                <div className="mb-5 border rounded-lg p-4">
+                <div className="mb-5 border border-theme-primary rounded-lg p-4 bg-theme-secondary">
                   <div className="flex items-center justify-between mb-3">
                     <div className="flex items-center gap-2 cursor-pointer" onClick={() => toggleSection('stage5')}>
-                      <h2 className="text-lg font-semibold">Stage 5: Backgrounds ({projectData.stage5.length})</h2>
+                      <h2 className="text-lg font-semibold text-theme-primary">Stage 5: Backgrounds ({projectData.stage5.length})</h2>
                       {expandedSections.stage5 ? <ChevronDown className="w-5 h-5" /> : <ChevronRight className="w-5 h-5" />}
                     </div>
                     <button
@@ -2588,13 +2588,13 @@ Create a NEW version of this shot.` }],
                             <div key={bg.id} id={`bg-${bg.id}`} className={`p-4 rounded border transition-all ${completedPrompts[bg.id] ? 'bg-green-100 border-green-400' : 'bg-green-50 border-green-200'}`}>
                               <div className="flex items-center justify-between mb-2">
                                 <div className="flex items-center gap-2">
-                                  <button onClick={() => toggleComplete(bg.id)} className={`w-6 h-6 rounded border-2 flex items-center justify-center ${completedPrompts[bg.id] ? 'bg-green-500 border-green-500 text-white' : 'border-gray-300'}`}>
+                                  <button onClick={() => toggleComplete(bg.id)} className={`w-6 h-6 rounded border-2 flex items-center justify-center ${completedPrompts[bg.id] ? 'bg-green-500 border-green-500 text-white' : 'border-theme-primary'}`}>
                                     {completedPrompts[bg.id] && <Check className="w-4 h-4" />}
                                   </button>
                                   <p className="font-semibold text-green-800">{bg.name}</p>
                                 </div>
                                 <div className="flex items-center gap-1">
-                                  <button onClick={() => copyToClipboard(bg.visualPrompt, `${bg.id}-solo`)} className={`px-2 py-1 text-xs rounded-lg ${copiedId === `${bg.id}-solo` ? 'bg-green-600 text-white' : 'bg-gray-200'}`}>
+                                  <button onClick={() => copyToClipboard(bg.visualPrompt, `${bg.id}-solo`)} className={`px-2 py-1 text-xs rounded-lg ${copiedId === `${bg.id}-solo` ? 'bg-green-600 text-white' : 'bg-theme-tertiary text-theme-secondary'}`}>
                                     {copiedId === `${bg.id}-solo` ? <Check className="w-3 h-3" /> : <Copy className="w-3 h-3" />}
                                   </button>
                                   <button onClick={() => copyWithStyle(bg.visualPrompt, bg.id)} className={`px-2 py-1 text-xs rounded-lg ${copiedId === bg.id ? 'bg-green-600 text-white' : 'bg-green-700 text-white'}`}>
@@ -2604,35 +2604,35 @@ Create a NEW version of this shot.` }],
                               </div>
                               {shotRefs.length > 0 && (
                                 <div className="flex flex-wrap gap-1 mb-2">
-                                  <span className="text-xs text-gray-500">Frames:</span>
+                                  <span className="text-xs text-theme-muted">Frames:</span>
                                   {shotRefs.map((ref, i) => (
                                     <button
                                       key={`7-${i}`}
                                       onClick={() => ref.hasStage7 && scrollToRef(`frame-${ref.scene}-${ref.shot}`)}
-                                      className={`text-xs px-1.5 py-0.5 rounded ${ref.hasStage7 ? 'bg-indigo-100 text-indigo-700 hover:bg-indigo-200 cursor-pointer' : 'bg-gray-100 text-gray-400 cursor-not-allowed'}`}
+                                      className={`text-xs px-1.5 py-0.5 rounded ${ref.hasStage7 ? 'bg-indigo-100 text-indigo-700 hover:bg-indigo-200 cursor-pointer' : 'bg-theme-tertiary text-theme-muted cursor-not-allowed'}`}
                                     >
                                       7.{ref.scene}.{ref.shot}
                                     </button>
                                   ))}
-                                  <span className="text-xs text-gray-500 ml-2">Animation:</span>
+                                  <span className="text-xs text-theme-muted ml-2">Animation:</span>
                                   {shotRefs.map((ref, i) => (
                                     <button
                                       key={`8-${i}`}
                                       onClick={() => ref.hasStage8 && scrollToRef(`anim-${ref.scene}-${ref.shot}`)}
-                                      className={`text-xs px-1.5 py-0.5 rounded ${ref.hasStage8 ? 'bg-purple-100 text-purple-700 hover:bg-purple-200 cursor-pointer' : 'bg-gray-100 text-gray-400 cursor-not-allowed'}`}
+                                      className={`text-xs px-1.5 py-0.5 rounded ${ref.hasStage8 ? 'bg-purple-100 text-purple-700 hover:bg-purple-200 cursor-pointer' : 'bg-theme-tertiary text-theme-muted cursor-not-allowed'}`}
                                     >
                                       8.{ref.scene}.{ref.shot}
                                     </button>
                                   ))}
                                 </div>
                               )}
-                              <p className="text-sm text-gray-600 font-mono bg-white p-2 rounded border">{bg.visualPrompt}</p>
+                              <p className="text-sm text-theme-secondary font-mono bg-theme-secondary p-2 rounded border border-theme-primary">{bg.visualPrompt}</p>
                               <PromptEditor id={bg.id} value={bg.visualPrompt} type="background" onRegenerate={(instr) => regenerateBackground(bg, instr)} regenId={bg.id} />
                             </div>
                           );
                         })}
                       </div>
-                      <button onClick={generateStage6} disabled={isGenerating} className="mt-4 px-5 py-2 bg-purple-600 text-white rounded-lg flex items-center gap-2 disabled:bg-gray-300">
+                      <button onClick={generateStage6} disabled={isGenerating} className="mt-4 px-5 py-2 bg-purple-600 text-white rounded-lg flex items-center gap-2 disabled:bg-theme-tertiary disabled:text-theme-muted">
                         {isGenerating ? <><Loader2 className="w-4 h-4 animate-spin" />Processing...</> : <>Generate Items</>}
                       </button>
                     </>
@@ -2642,10 +2642,10 @@ Create a NEW version of this shot.` }],
 
               {/* Stage 6: Items */}
               {currentStage >= 6 && (
-                <div className="mb-5 border rounded-lg p-4">
+                <div className="mb-5 border border-theme-primary rounded-lg p-4 bg-theme-secondary">
                   <div className="flex items-center justify-between mb-3">
                     <div className="flex items-center gap-2 cursor-pointer" onClick={() => toggleSection('stage6')}>
-                      <h2 className="text-lg font-semibold">Stage 6: Items ({projectData.stage6.length})</h2>
+                      <h2 className="text-lg font-semibold text-theme-primary">Stage 6: Items ({projectData.stage6.length})</h2>
                       {expandedSections.stage6 ? <ChevronDown className="w-5 h-5" /> : <ChevronRight className="w-5 h-5" />}
                     </div>
                     <button
@@ -2660,8 +2660,8 @@ Create a NEW version of this shot.` }],
                   {expandedSections.stage6 && (
                     <>
                       {projectData.stage6.length === 0 ? (
-                        <div className="bg-gray-50 p-4 rounded-lg text-center">
-                          <p className="text-gray-500">No items found in this story.</p>
+                        <div className="bg-theme-tertiary p-4 rounded-lg text-center">
+                          <p className="text-theme-muted">No items found in this story.</p>
                         </div>
                       ) : (
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
@@ -2671,13 +2671,13 @@ Create a NEW version of this shot.` }],
                               <div key={item.id} id={`item-${item.id}`} className={`p-4 rounded border transition-all ${completedPrompts[item.id] ? 'bg-amber-100 border-amber-400' : 'bg-amber-50 border-amber-200'}`}>
                                 <div className="flex items-center justify-between mb-2">
                                   <div className="flex items-center gap-2">
-                                    <button onClick={() => toggleComplete(item.id)} className={`w-6 h-6 rounded border-2 flex items-center justify-center ${completedPrompts[item.id] ? 'bg-green-500 border-green-500 text-white' : 'border-gray-300'}`}>
+                                    <button onClick={() => toggleComplete(item.id)} className={`w-6 h-6 rounded border-2 flex items-center justify-center ${completedPrompts[item.id] ? 'bg-green-500 border-green-500 text-white' : 'border-theme-primary'}`}>
                                       {completedPrompts[item.id] && <Check className="w-4 h-4" />}
                                     </button>
                                     <p className="font-semibold text-amber-800">{item.name}</p>
                                   </div>
                                   <div className="flex items-center gap-1">
-                                    <button onClick={() => copyToClipboard(item.visualPrompt, `${item.id}-solo`)} className={`px-2 py-1 text-xs rounded-lg ${copiedId === `${item.id}-solo` ? 'bg-green-600 text-white' : 'bg-gray-200'}`}>
+                                    <button onClick={() => copyToClipboard(item.visualPrompt, `${item.id}-solo`)} className={`px-2 py-1 text-xs rounded-lg ${copiedId === `${item.id}-solo` ? 'bg-green-600 text-white' : 'bg-theme-tertiary text-theme-secondary'}`}>
                                       {copiedId === `${item.id}-solo` ? <Check className="w-3 h-3" /> : <Copy className="w-3 h-3" />}
                                     </button>
                                     <button onClick={() => copyWithStyle(item.visualPrompt, item.id)} className={`px-2 py-1 text-xs rounded-lg ${copiedId === item.id ? 'bg-green-600 text-white' : 'bg-amber-600 text-white'}`}>
@@ -2687,36 +2687,36 @@ Create a NEW version of this shot.` }],
                                 </div>
                                 {shotRefs.length > 0 && (
                                   <div className="flex flex-wrap gap-1 mb-2">
-                                    <span className="text-xs text-gray-500">Frames:</span>
+                                    <span className="text-xs text-theme-muted">Frames:</span>
                                     {shotRefs.map((ref, i) => (
                                       <button
                                         key={`7-${i}`}
                                         onClick={() => ref.hasStage7 && scrollToRef(`frame-${ref.scene}-${ref.shot}`)}
-                                        className={`text-xs px-1.5 py-0.5 rounded ${ref.hasStage7 ? 'bg-indigo-100 text-indigo-700 hover:bg-indigo-200 cursor-pointer' : 'bg-gray-100 text-gray-400 cursor-not-allowed'}`}
+                                        className={`text-xs px-1.5 py-0.5 rounded ${ref.hasStage7 ? 'bg-indigo-100 text-indigo-700 hover:bg-indigo-200 cursor-pointer' : 'bg-theme-tertiary text-theme-muted cursor-not-allowed'}`}
                                       >
                                         7.{ref.scene}.{ref.shot}
                                       </button>
                                     ))}
-                                    <span className="text-xs text-gray-500 ml-2">Animation:</span>
+                                    <span className="text-xs text-theme-muted ml-2">Animation:</span>
                                     {shotRefs.map((ref, i) => (
                                       <button
                                         key={`8-${i}`}
                                         onClick={() => ref.hasStage8 && scrollToRef(`anim-${ref.scene}-${ref.shot}`)}
-                                        className={`text-xs px-1.5 py-0.5 rounded ${ref.hasStage8 ? 'bg-purple-100 text-purple-700 hover:bg-purple-200 cursor-pointer' : 'bg-gray-100 text-gray-400 cursor-not-allowed'}`}
+                                        className={`text-xs px-1.5 py-0.5 rounded ${ref.hasStage8 ? 'bg-purple-100 text-purple-700 hover:bg-purple-200 cursor-pointer' : 'bg-theme-tertiary text-theme-muted cursor-not-allowed'}`}
                                       >
                                         8.{ref.scene}.{ref.shot}
                                       </button>
                                     ))}
                                   </div>
                                 )}
-                                <p className="text-sm text-gray-600 font-mono bg-white p-2 rounded border">{item.visualPrompt}</p>
+                                <p className="text-sm text-theme-secondary font-mono bg-theme-secondary p-2 rounded border border-theme-primary">{item.visualPrompt}</p>
                                 <PromptEditor id={item.id} value={item.visualPrompt} type="item" onRegenerate={(instr) => regenerateItem(item, instr)} regenId={item.id} />
                               </div>
                             );
                           })}
                         </div>
                       )}
-                      <button onClick={() => { setProjectData(p => ({ ...p, stage7: [] })); setBatchProgress(p => ({ ...p, stage7ScenesCompleted: 0 })); generateStage7(); }} disabled={isGenerating} className="mt-4 px-5 py-2 bg-purple-600 text-white rounded-lg flex items-center gap-2 disabled:bg-gray-300">
+                      <button onClick={() => { setProjectData(p => ({ ...p, stage7: [] })); setBatchProgress(p => ({ ...p, stage7ScenesCompleted: 0 })); generateStage7(); }} disabled={isGenerating} className="mt-4 px-5 py-2 bg-purple-600 text-white rounded-lg flex items-center gap-2 disabled:bg-theme-tertiary disabled:text-theme-muted">
                         {isGenerating ? <><Loader2 className="w-4 h-4 animate-spin" />Processing...</> : <>Generate Frames</>}
                       </button>
                     </>
@@ -2726,10 +2726,10 @@ Create a NEW version of this shot.` }],
 
               {/* Stage 7: Frames */}
               {projectData.stage7?.length > 0 && (
-                <div className="mb-5 border rounded-lg p-4">
+                <div className="mb-5 border border-theme-primary rounded-lg p-4 bg-theme-secondary">
                   <div className="flex items-center justify-between mb-3">
                     <div className="flex items-center gap-2 cursor-pointer" onClick={() => toggleSection('stage7')}>
-                      <h2 className="text-lg font-semibold">Stage 7: Frames ({projectData.stage7.length})</h2>
+                      <h2 className="text-lg font-semibold text-theme-primary">Stage 7: Frames ({projectData.stage7.length})</h2>
                       {expandedSections.stage7 ? <ChevronDown className="w-5 h-5" /> : <ChevronRight className="w-5 h-5" />}
                     </div>
                     <button
@@ -2745,7 +2745,7 @@ Create a NEW version of this shot.` }],
                     <>
                       {/* Scene-level regen buttons */}
                       <div className="flex flex-wrap gap-2 mb-4">
-                        <span className="text-sm text-gray-600">Regen by scene:</span>
+                        <span className="text-sm text-theme-muted">Regen by scene:</span>
                         {[...new Set(projectData.stage7.map(f => f.scene))].sort((a, b) => a - b).map(sceneNum => (
                           <button
                             key={sceneNum}
@@ -2763,12 +2763,12 @@ Create a NEW version of this shot.` }],
                           const refs = getReferencesForFrame(f);
 
                           return (
-                          <div key={f.id} id={`frame-${f.scene}-${f.shotNumber}`} className="bg-gray-50 p-4 rounded border transition-all">
+                          <div key={f.id} id={`frame-${f.scene}-${f.shotNumber}`} className="bg-theme-tertiary p-4 rounded border border-theme-primary transition-all">
                             <div className="flex items-center gap-2 mb-3 flex-wrap">
                               <span className="font-semibold text-indigo-700">Scene {f.scene} Shot {f.shotNumber}</span>
                               <span className="font-mono text-xs bg-indigo-200 text-indigo-800 px-1.5 py-0.5 rounded">7.{f.scene}.{f.shotNumber}</span>
                               <button onClick={() => scrollToRef(`shot-${f.scene}-${f.shotNumber}`)} className="font-mono text-xs bg-purple-100 text-purple-700 px-1.5 py-0.5 rounded hover:bg-purple-200">Shot</button>
-                              <button onClick={() => hasStage8ForShot(f.scene, f.shotNumber) && scrollToRef(`anim-${f.scene}-${f.shotNumber}`)} className={`font-mono text-xs px-1.5 py-0.5 rounded ${hasStage8ForShot(f.scene, f.shotNumber) ? 'bg-purple-200 text-purple-800 hover:bg-purple-300 cursor-pointer' : 'bg-gray-200 text-gray-400 cursor-not-allowed'}`}>
+                              <button onClick={() => hasStage8ForShot(f.scene, f.shotNumber) && scrollToRef(`anim-${f.scene}-${f.shotNumber}`)} className={`font-mono text-xs px-1.5 py-0.5 rounded ${hasStage8ForShot(f.scene, f.shotNumber) ? 'bg-purple-200 text-purple-800 hover:bg-purple-300 cursor-pointer' : 'bg-theme-tertiary text-theme-muted cursor-not-allowed'}`}>
                                 8.{f.scene}.{f.shotNumber}
                               </button>
                               <span className="text-xs bg-orange-100 text-orange-700 px-2 py-0.5 rounded">{f.duration}s</span>
@@ -2776,10 +2776,10 @@ Create a NEW version of this shot.` }],
 
                             {/* References: Characters, Backgrounds, Items */}
                             {(refs.characters.length > 0 || refs.backgrounds.length > 0 || refs.items.length > 0) && (
-                              <div className="flex flex-wrap gap-2 mb-3 p-2 bg-white rounded border">
+                              <div className="flex flex-wrap gap-2 mb-3 p-2 bg-theme-secondary rounded border border-theme-primary">
                                 {refs.characters.length > 0 && (
                                   <div className="flex items-center gap-1">
-                                    <span className="text-xs text-gray-500">Character(s):</span>
+                                    <span className="text-xs text-theme-muted">Character(s):</span>
                                     {refs.characters.map(c => (
                                       <button key={c.id} onClick={() => scrollToRef(`char-${c.id}`)} className="text-xs bg-purple-100 text-purple-700 px-1.5 py-0.5 rounded hover:bg-purple-200">
                                         {getCleanName(c.name).split(' ')[0]}
@@ -2789,7 +2789,7 @@ Create a NEW version of this shot.` }],
                                 )}
                                 {refs.backgrounds.length > 0 && (
                                   <div className="flex items-center gap-1">
-                                    <span className="text-xs text-gray-500">BG:</span>
+                                    <span className="text-xs text-theme-muted">BG:</span>
                                     {refs.backgrounds.map(bg => (
                                       <button key={bg.id} onClick={() => scrollToRef(`bg-${bg.id}`)} className="text-xs bg-green-100 text-green-700 px-1.5 py-0.5 rounded hover:bg-green-200">
                                         {bg.name.split(' ').slice(0, 2).join(' ')}
@@ -2799,7 +2799,7 @@ Create a NEW version of this shot.` }],
                                 )}
                                 {refs.items.length > 0 && (
                                   <div className="flex items-center gap-1">
-                                    <span className="text-xs text-gray-500">Items:</span>
+                                    <span className="text-xs text-theme-muted">Items:</span>
                                     {refs.items.map(item => (
                                       <button key={item.id} onClick={() => scrollToRef(`item-${item.id}`)} className="text-xs bg-amber-100 text-amber-700 px-1.5 py-0.5 rounded hover:bg-amber-200">
                                         {item.name.split(' ').slice(0, 2).join(' ')}
@@ -2811,17 +2811,17 @@ Create a NEW version of this shot.` }],
                             )}
 
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                              <div className={`rounded border ${completedPrompts[`${f.id}-first`] ? 'bg-green-50 border-green-300' : 'bg-white'}`}>
+                              <div className={`rounded border ${completedPrompts[`${f.id}-first`] ? 'bg-green-50 border-green-300' : 'bg-theme-secondary border-theme-primary'}`}>
                                 <div className="p-3 border-b bg-gradient-to-r from-green-50 to-emerald-50">
                                   <div className="flex items-center justify-between">
                                     <div className="flex items-center gap-2">
-                                      <button onClick={() => toggleComplete(`${f.id}-first`)} className={`w-5 h-5 rounded border-2 flex items-center justify-center ${completedPrompts[`${f.id}-first`] ? 'bg-green-500 border-green-500 text-white' : 'border-gray-300'}`}>
+                                      <button onClick={() => toggleComplete(`${f.id}-first`)} className={`w-5 h-5 rounded border-2 flex items-center justify-center ${completedPrompts[`${f.id}-first`] ? 'bg-green-500 border-green-500 text-white' : 'border-theme-primary'}`}>
                                         {completedPrompts[`${f.id}-first`] && <Check className="w-3 h-3" />}
                                       </button>
                                       <span className="text-sm font-bold text-green-700">FIRST FRAME</span>
                                     </div>
                                     <div className="flex items-center gap-1">
-                                      <button onClick={() => copyToClipboard(f.firstFrame, `${f.id}-first-solo`)} className={`px-2 py-1 text-xs rounded ${copiedId === `${f.id}-first-solo` ? 'bg-green-600 text-white' : 'bg-gray-200'}`}>
+                                      <button onClick={() => copyToClipboard(f.firstFrame, `${f.id}-first-solo`)} className={`px-2 py-1 text-xs rounded ${copiedId === `${f.id}-first-solo` ? 'bg-green-600 text-white' : 'bg-theme-tertiary text-theme-secondary'}`}>
                                         {copiedId === `${f.id}-first-solo` ? <Check className="w-3 h-3" /> : <Copy className="w-3 h-3" />}
                                       </button>
                                       <button onClick={() => copyWithStyle(f.firstFrame, `${f.id}-first`)} className={`px-2 py-1 text-xs rounded ${copiedId === `${f.id}-first` ? 'bg-green-600 text-white' : 'bg-green-600 text-white'}`}>
@@ -2831,22 +2831,22 @@ Create a NEW version of this shot.` }],
                                   </div>
                                 </div>
                                 <div className="p-3">
-                                  <p className="text-sm text-gray-700 font-mono">{f.firstFrame}</p>
+                                  <p className="text-sm text-theme-secondary font-mono">{f.firstFrame}</p>
                                   <PromptEditor id={`${f.id}-first-edit`} value={f.firstFrame} type="frame" field="firstFrame" onRegenerate={(instr) => regenerateFrame(f, 'firstFrame', instr)} regenId={`${f.id}-firstFrame`} />
                                 </div>
                               </div>
 
-                              <div className={`rounded border ${completedPrompts[`${f.id}-last`] ? 'bg-green-50 border-green-300' : 'bg-white'}`}>
+                              <div className={`rounded border ${completedPrompts[`${f.id}-last`] ? 'bg-green-50 border-green-300' : 'bg-theme-secondary border-theme-primary'}`}>
                                 <div className="p-3 border-b bg-gradient-to-r from-blue-50 to-indigo-50">
                                   <div className="flex items-center justify-between">
                                     <div className="flex items-center gap-2">
-                                      <button onClick={() => toggleComplete(`${f.id}-last`)} className={`w-5 h-5 rounded border-2 flex items-center justify-center ${completedPrompts[`${f.id}-last`] ? 'bg-green-500 border-green-500 text-white' : 'border-gray-300'}`}>
+                                      <button onClick={() => toggleComplete(`${f.id}-last`)} className={`w-5 h-5 rounded border-2 flex items-center justify-center ${completedPrompts[`${f.id}-last`] ? 'bg-green-500 border-green-500 text-white' : 'border-theme-primary'}`}>
                                         {completedPrompts[`${f.id}-last`] && <Check className="w-3 h-3" />}
                                       </button>
                                       <span className="text-sm font-bold text-blue-700">LAST FRAME</span>
                                     </div>
                                     <div className="flex items-center gap-1">
-                                      <button onClick={() => copyToClipboard(f.lastFrame, `${f.id}-last-solo`)} className={`px-2 py-1 text-xs rounded ${copiedId === `${f.id}-last-solo` ? 'bg-green-600 text-white' : 'bg-gray-200'}`}>
+                                      <button onClick={() => copyToClipboard(f.lastFrame, `${f.id}-last-solo`)} className={`px-2 py-1 text-xs rounded ${copiedId === `${f.id}-last-solo` ? 'bg-green-600 text-white' : 'bg-theme-tertiary text-theme-secondary'}`}>
                                         {copiedId === `${f.id}-last-solo` ? <Check className="w-3 h-3" /> : <Copy className="w-3 h-3" />}
                                       </button>
                                       <button onClick={() => copyWithStyle(f.lastFrame, `${f.id}-last`)} className={`px-2 py-1 text-xs rounded ${copiedId === `${f.id}-last` ? 'bg-green-600 text-white' : 'bg-blue-600 text-white'}`}>
@@ -2856,7 +2856,7 @@ Create a NEW version of this shot.` }],
                                   </div>
                                 </div>
                                 <div className="p-3">
-                                  <p className="text-sm text-gray-700 font-mono">{f.lastFrame}</p>
+                                  <p className="text-sm text-theme-secondary font-mono">{f.lastFrame}</p>
                                   <PromptEditor id={`${f.id}-last-edit`} value={f.lastFrame} type="frame" field="lastFrame" onRegenerate={(instr) => regenerateFrame(f, 'lastFrame', instr)} regenId={`${f.id}-lastFrame`} />
                                 </div>
                               </div>
@@ -2867,11 +2867,11 @@ Create a NEW version of this shot.` }],
                       </div>
 
                       {batchProgress.stage7ScenesCompleted < (projectData.metadata?.totalScenes || 0) ? (
-                        <button onClick={generateStage7} disabled={isGenerating} className="mt-4 px-5 py-2 bg-indigo-600 text-white rounded-lg flex items-center gap-2 disabled:bg-gray-300">
+                        <button onClick={generateStage7} disabled={isGenerating} className="mt-4 px-5 py-2 bg-indigo-600 text-white rounded-lg flex items-center gap-2 disabled:bg-theme-tertiary disabled:text-theme-muted">
                           {isGenerating ? <><Loader2 className="w-4 h-4 animate-spin" />Processing...</> : <>More Frames</>}
                         </button>
                       ) : (
-                        <button onClick={() => { setProjectData(p => ({ ...p, stage8: [] })); setBatchProgress(p => ({ ...p, stage8ScenesCompleted: 0 })); generateStage8(); }} disabled={isGenerating} className="mt-4 px-5 py-2 bg-purple-600 text-white rounded-lg flex items-center gap-2 disabled:bg-gray-300">
+                        <button onClick={() => { setProjectData(p => ({ ...p, stage8: [] })); setBatchProgress(p => ({ ...p, stage8ScenesCompleted: 0 })); generateStage8(); }} disabled={isGenerating} className="mt-4 px-5 py-2 bg-purple-600 text-white rounded-lg flex items-center gap-2 disabled:bg-theme-tertiary disabled:text-theme-muted">
                           {isGenerating ? <><Loader2 className="w-4 h-4 animate-spin" />Processing...</> : <>Generate Animation</>}
                         </button>
                       )}
@@ -2882,10 +2882,10 @@ Create a NEW version of this shot.` }],
 
               {/* Stage 8: Animation */}
               {projectData.stage8?.length > 0 && (
-                <div className="mb-5 border rounded-lg p-4">
+                <div className="mb-5 border border-theme-primary rounded-lg p-4 bg-theme-secondary">
                   <div className="flex items-center justify-between mb-3">
                     <div className="flex items-center gap-2 cursor-pointer" onClick={() => toggleSection('stage8')}>
-                      <h2 className="text-lg font-semibold">Stage 8: Animation ({projectData.stage8.length})</h2>
+                      <h2 className="text-lg font-semibold text-theme-primary">Stage 8: Animation ({projectData.stage8.length})</h2>
                       {expandedSections.stage8 ? <ChevronDown className="w-5 h-5" /> : <ChevronRight className="w-5 h-5" />}
                     </div>
                     <button
@@ -2901,7 +2901,7 @@ Create a NEW version of this shot.` }],
                     <>
                       {/* Scene-level regen buttons */}
                       <div className="flex flex-wrap gap-2 mb-4">
-                        <span className="text-sm text-gray-600">Regen by scene:</span>
+                        <span className="text-sm text-theme-muted">Regen by scene:</span>
                         {[...new Set(projectData.stage8.map(a => a.scene))].sort((a, b) => a - b).map(sceneNum => (
                           <button
                             key={sceneNum}
@@ -2916,15 +2916,15 @@ Create a NEW version of this shot.` }],
                       </div>
                       <div className="space-y-3">
                         {projectData.stage8.map(a => (
-                          <div key={a.id} id={`anim-${a.scene}-${a.shotNumber}`} className={`p-4 rounded border transition-all ${completedPrompts[a.id] ? 'bg-green-50 border-green-300' : 'bg-gray-50'}`}>
+                          <div key={a.id} id={`anim-${a.scene}-${a.shotNumber}`} className={`p-4 rounded border transition-all ${completedPrompts[a.id] ? 'bg-green-50 border-green-300' : 'bg-theme-tertiary border-theme-primary'}`}>
                             <div className="flex items-center justify-between mb-2">
                               <div className="flex items-center gap-2 flex-wrap">
-                                <button onClick={() => toggleComplete(a.id)} className={`w-6 h-6 rounded border-2 flex items-center justify-center ${completedPrompts[a.id] ? 'bg-green-500 border-green-500 text-white' : 'border-gray-300'}`}>
+                                <button onClick={() => toggleComplete(a.id)} className={`w-6 h-6 rounded border-2 flex items-center justify-center ${completedPrompts[a.id] ? 'bg-green-500 border-green-500 text-white' : 'border-theme-primary'}`}>
                                   {completedPrompts[a.id] && <Check className="w-4 h-4" />}
                                 </button>
                                 <p className="font-semibold text-purple-700">Scene {a.scene} Shot {a.shotNumber}</p>
                                 <span className="font-mono text-xs bg-purple-200 text-purple-800 px-1.5 py-0.5 rounded">8.{a.scene}.{a.shotNumber}</span>
-                                <button onClick={() => scrollToRef(`shot-${a.scene}-${a.shotNumber}`)} className="font-mono text-xs bg-gray-200 text-gray-700 px-1.5 py-0.5 rounded hover:bg-gray-300">Shot</button>
+                                <button onClick={() => scrollToRef(`shot-${a.scene}-${a.shotNumber}`)} className="font-mono text-xs bg-theme-tertiary text-theme-secondary px-1.5 py-0.5 rounded hover:bg-theme-tertiary">Shot</button>
                                 <button onClick={() => scrollToRef(`frame-${a.scene}-${a.shotNumber}`)} className="font-mono text-xs bg-indigo-100 text-indigo-700 px-1.5 py-0.5 rounded hover:bg-indigo-200">7.{a.scene}.{a.shotNumber}</button>
                                 <span className="text-xs bg-orange-100 text-orange-700 px-2 py-0.5 rounded">{a.duration}s</span>
                               </div>
@@ -2932,14 +2932,14 @@ Create a NEW version of this shot.` }],
                                 {copiedId === a.id ? <><Check className="w-4 h-4" />Copied!</> : <><Copy className="w-4 h-4" />Copy</>}
                               </button>
                             </div>
-                            <p className="text-sm text-gray-700 font-mono bg-white p-3 rounded border">{a.animationPrompt}</p>
+                            <p className="text-sm text-theme-secondary font-mono bg-theme-secondary p-3 rounded border border-theme-primary">{a.animationPrompt}</p>
                             <PromptEditor id={a.id} value={a.animationPrompt} type="animation" onRegenerate={(instr) => regenerateAnimation(a, instr)} regenId={a.id} />
                           </div>
                         ))}
                       </div>
 
                       {batchProgress.stage8ScenesCompleted < (projectData.metadata?.totalScenes || 0) && (
-                        <button onClick={generateStage8} disabled={isGenerating} className="mt-4 px-5 py-2 bg-purple-600 text-white rounded-lg flex items-center gap-2 disabled:bg-gray-300">
+                        <button onClick={generateStage8} disabled={isGenerating} className="mt-4 px-5 py-2 bg-purple-600 text-white rounded-lg flex items-center gap-2 disabled:bg-theme-tertiary disabled:text-theme-muted">
                           {isGenerating ? <><Loader2 className="w-4 h-4 animate-spin" />Processing...</> : <>More Animation</>}
                         </button>
                       )}
