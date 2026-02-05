@@ -8,6 +8,7 @@ datasource db {
 }
 
 enum UserRole {
+  REVOKED
   USER
   ADMIN
   SUPER_ADMIN

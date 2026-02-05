@@ -2,6 +2,7 @@ import { DefaultSession } from 'next-auth';
 
 // User roles enum - mirrors Prisma enum
 export enum UserRole {
+  REVOKED = 'REVOKED',
   USER = 'USER',
   ADMIN = 'ADMIN',
   SUPER_ADMIN = 'SUPER_ADMIN',

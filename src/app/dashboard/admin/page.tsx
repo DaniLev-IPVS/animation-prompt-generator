@@ -16,6 +16,7 @@ import {
   ExternalLink,
   ChevronLeft,
   ChevronRight,
+  Ban,
 } from 'lucide-react';
 import { UserRole } from '@/types';
 
@@ -85,12 +86,11 @@ export default function AdminPage() {
     }
   };
 
-  const toggleRole = async (userId: string, currentRole: UserRole) => {
+  const updateUserRole = async (userId: string, newRole: UserRole) => {
     if (!isSuperAdmin) return;
 
     setUpdatingUserId(userId);
     try {
-      const newRole = currentRole === UserRole.USER ? UserRole.ADMIN : UserRole.USER;
       const response = await fetch(`/api/admin/users/${userId}`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
@@ -115,21 +115,25 @@ export default function AdminPage() {
         return <ShieldCheck className="w-4 h-4 text-purple-400" />;
       case UserRole.ADMIN:
         return <Shield className="w-4 h-4 text-blue-400" />;
+      case UserRole.REVOKED:
+        return <Ban className="w-4 h-4 text-red-400" />;
       default:
         return <User className="w-4 h-4 text-gray-400" />;
     }
   };
 
   const getRoleBadge = (role: UserRole) => {
-    const styles = {
+    const styles: Record<UserRole, string> = {
       [UserRole.SUPER_ADMIN]: 'bg-purple-500/20 text-purple-400 border-purple-500/30',
       [UserRole.ADMIN]: 'bg-blue-500/20 text-blue-400 border-blue-500/30',
       [UserRole.USER]: 'bg-gray-500/20 text-theme-muted border-gray-500/30',
+      [UserRole.REVOKED]: 'bg-red-500/20 text-red-400 border-red-500/30',
     };
-    const labels = {
+    const labels: Record<UserRole, string> = {
       [UserRole.SUPER_ADMIN]: 'Super Admin',
       [UserRole.ADMIN]: 'Admin',
       [UserRole.USER]: 'User',
+      [UserRole.REVOKED]: 'Revoked',
     };
     return (
       <span className={`px-2 py-1 text-xs rounded-full border ${styles[role]}`}>
@@ -214,7 +218,7 @@ export default function AdminPage() {
             </thead>
             <tbody>
               {users.map((user) => (
-                <tr key={user.id} className="border-b border-theme-primary hover:bg-theme-tertiary">
+                <tr key={user.id} className={`border-b border-theme-primary hover:bg-theme-tertiary ${user.role === UserRole.REVOKED ? 'opacity-60' : ''}`}>
                   <td className="px-4 py-3">
                     <div className="flex items-center gap-2">
                       {getRoleIcon(user.role)}
@@ -244,18 +248,24 @@ export default function AdminPage() {
                   {isSuperAdmin && (
                     <td className="px-4 py-3">
                       <div className="flex items-center justify-center gap-2">
-                        {user.role !== UserRole.SUPER_ADMIN && (
-                          <button
-                            onClick={() => toggleRole(user.id, user.role)}
+                        {/* Role dropdown - only show if not current user */}
+                        {user.id !== session?.user?.id ? (
+                          <select
+                            value={user.role}
+                            onChange={(e) => updateUserRole(user.id, e.target.value as UserRole)}
                             disabled={updatingUserId === user.id}
-                            className="px-3 py-1 text-xs bg-blue-500/20 text-blue-400 hover:bg-blue-500/30 rounded transition-colors disabled:opacity-50"
+                            className="px-2 py-1 text-xs bg-theme-tertiary border border-theme-primary rounded text-theme-secondary focus:outline-none focus:ring-2 focus:ring-purple-500 disabled:opacity-50"
                           >
-                            {updatingUserId === user.id ? (
-                              <Loader2 className="w-3 h-3 animate-spin" />
-                            ) : (
-                              user.role === UserRole.ADMIN ? 'Demote' : 'Make Admin'
-                            )}
-                          </button>
+                            <option value={UserRole.REVOKED}>Revoked</option>
+                            <option value={UserRole.USER}>User</option>
+                            <option value={UserRole.ADMIN}>Admin</option>
+                            <option value={UserRole.SUPER_ADMIN}>Super Admin</option>
+                          </select>
+                        ) : (
+                          <span className="text-xs text-theme-muted italic">You</span>
+                        )}
+                        {updatingUserId === user.id && (
+                          <Loader2 className="w-3 h-3 animate-spin text-purple-400" />
                         )}
                         <Link
                           href={`/dashboard/admin/users/${user.id}`}

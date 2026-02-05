@@ -34,6 +34,11 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
           return null;
         }
 
+        // Block revoked users from logging in
+        if (user.role === 'REVOKED') {
+          return null;
+        }
+
         // Update lastActiveAt on login
         await prisma.user.update({
           where: { id: user.id },

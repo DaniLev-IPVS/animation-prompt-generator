@@ -128,14 +128,6 @@ export async function PATCH(
       return NextResponse.json({ error: 'Invalid role' }, { status: 400 });
     }
 
-    // Prevent creating more super admins (only original can be super admin)
-    if (role === UserRole.SUPER_ADMIN) {
-      return NextResponse.json(
-        { error: 'Cannot promote to Super Admin' },
-        { status: 400 }
-      );
-    }
-
     const user = await prisma.user.update({
       where: { id },
       data: { role },
