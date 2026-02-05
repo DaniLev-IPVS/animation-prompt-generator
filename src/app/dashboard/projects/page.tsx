@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { FolderOpen, Trash2, Share2, Loader2, Clock, Film, ExternalLink } from 'lucide-react';
+import { FolderOpen, Trash2, Share2, Loader2, Clock, Film, ExternalLink, Download } from 'lucide-react';
 
 interface ProjectSummary {
   id: string;
@@ -21,6 +21,7 @@ export default function ProjectsPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [deletingId, setDeletingId] = useState<string | null>(null);
   const [sharingId, setSharingId] = useState<string | null>(null);
+  const [exportingId, setExportingId] = useState<string | null>(null);
 
   useEffect(() => {
     loadProjects();
@@ -79,6 +80,41 @@ export default function ProjectsPage() {
   const copyShareLink = (shareId: string) => {
     const url = `${window.location.origin}/shared/${shareId}`;
     navigator.clipboard.writeText(url);
+  };
+
+  const exportProject = async (project: ProjectSummary) => {
+    setExportingId(project.id);
+    try {
+      const response = await fetch(`/api/projects/${project.id}`);
+      if (response.ok) {
+        const projectData = await response.json();
+
+        // Create a clean export object
+        const exportData = {
+          name: projectData.name,
+          exportedAt: new Date().toISOString(),
+          scriptInput: projectData.scriptInput,
+          configInput: projectData.configInput,
+          projectData: projectData.projectData,
+          completedPrompts: projectData.completedPrompts,
+        };
+
+        // Create and download the file
+        const blob = new Blob([JSON.stringify(exportData, null, 2)], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `${project.name.replace(/[^a-z0-9]/gi, '_')}_export.json`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+      }
+    } catch (error) {
+      console.error('Failed to export project:', error);
+    } finally {
+      setExportingId(null);
+    }
   };
 
   if (isLoading) {
@@ -148,6 +184,20 @@ export default function ProjectsPage() {
                       Copy Link
                     </button>
                   )}
+
+                  <button
+                    onClick={() => exportProject(project)}
+                    disabled={exportingId === project.id}
+                    className="px-3 py-1.5 text-sm bg-blue-100 text-blue-700 rounded-lg hover:bg-blue-200 flex items-center gap-1 transition-colors"
+                    title="Export project as JSON"
+                  >
+                    {exportingId === project.id ? (
+                      <Loader2 className="w-4 h-4 animate-spin" />
+                    ) : (
+                      <Download className="w-4 h-4" />
+                    )}
+                    Export
+                  </button>
 
                   <button
                     onClick={() => toggleShare(project)}
