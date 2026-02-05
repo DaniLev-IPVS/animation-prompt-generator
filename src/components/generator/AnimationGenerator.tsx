@@ -19,6 +19,8 @@ import {
   Loader2,
   FolderOpen,
   Trash2,
+  Share2,
+  ExternalLink,
 } from 'lucide-react';
 import { useProject } from '@/hooks/useProject';
 import { useAnthropicAPI } from '@/hooks/useAnthropicAPI';
@@ -80,11 +82,15 @@ export default function AnimationGenerator() {
     shotCount: number;
     sceneCount: number;
     runtime: number;
+    isPublic: boolean;
+    shareId: string | null;
   }
   const [projectsList, setProjectsList] = useState<ProjectListItem[]>([]);
   const [isLoadingProjects, setIsLoadingProjects] = useState(false);
   const [renamingProjectId, setRenamingProjectId] = useState<string | null>(null);
   const [renameValue, setRenameValue] = useState('');
+  const [exportingProjectId, setExportingProjectId] = useState<string | null>(null);
+  const [sharingProjectId, setSharingProjectId] = useState<string | null>(null);
 
   const chatEndRef = useRef<HTMLDivElement>(null);
 
@@ -164,6 +170,62 @@ export default function AnimationGenerator() {
     } catch {
       // Silently fail
     }
+  };
+
+  const exportProject = async (project: ProjectListItem) => {
+    setExportingProjectId(project.id);
+    try {
+      const response = await fetch(`/api/projects/${project.id}`);
+      if (response.ok) {
+        const projectData = await response.json();
+        const exportData = {
+          name: projectData.name,
+          exportedAt: new Date().toISOString(),
+          scriptInput: projectData.scriptInput,
+          configInput: projectData.configInput,
+          projectData: projectData.projectData,
+          completedPrompts: projectData.completedPrompts,
+        };
+        const blob = new Blob([JSON.stringify(exportData, null, 2)], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `${project.name.replace(/[^a-z0-9]/gi, '_')}_export.json`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+      }
+    } catch {
+      // Silently fail
+    } finally {
+      setExportingProjectId(null);
+    }
+  };
+
+  const toggleShare = async (project: ProjectListItem) => {
+    setSharingProjectId(project.id);
+    try {
+      if (project.isPublic) {
+        await fetch(`/api/projects/${project.id}/share`, { method: 'DELETE' });
+        setProjectsList(prev => prev.map(p => p.id === project.id ? { ...p, isPublic: false, shareId: null } : p));
+      } else {
+        const response = await fetch(`/api/projects/${project.id}/share`, { method: 'POST' });
+        if (response.ok) {
+          const data = await response.json();
+          setProjectsList(prev => prev.map(p => p.id === project.id ? { ...p, isPublic: true, shareId: data.shareId } : p));
+        }
+      }
+    } catch {
+      // Silently fail
+    } finally {
+      setSharingProjectId(null);
+    }
+  };
+
+  const copyShareLink = (shareId: string) => {
+    const url = `${window.location.origin}/shared/${shareId}`;
+    navigator.clipboard.writeText(url);
   };
 
   // Utility functions
@@ -1792,6 +1854,46 @@ Create a NEW version of this shot.` }],
                             >
                               <FolderOpen className="w-4 h-4" />
                               {currentProjectId === project.id ? 'Current' : 'Open'}
+                            </button>
+                            <button
+                              onClick={() => exportProject(project)}
+                              disabled={exportingProjectId === project.id}
+                              className="px-3 py-1.5 text-sm bg-blue-100 text-blue-700 rounded-lg hover:bg-blue-200 flex items-center gap-1"
+                              title="Export as JSON"
+                            >
+                              {exportingProjectId === project.id ? (
+                                <Loader2 className="w-4 h-4 animate-spin" />
+                              ) : (
+                                <Download className="w-4 h-4" />
+                              )}
+                              Export
+                            </button>
+                            {project.isPublic && project.shareId && (
+                              <button
+                                onClick={() => copyShareLink(project.shareId!)}
+                                className="px-3 py-1.5 text-sm bg-green-100 text-green-700 rounded-lg hover:bg-green-200 flex items-center gap-1"
+                                title="Copy share link"
+                              >
+                                <ExternalLink className="w-4 h-4" />
+                                Copy Link
+                              </button>
+                            )}
+                            <button
+                              onClick={() => toggleShare(project)}
+                              disabled={sharingProjectId === project.id}
+                              className={`px-3 py-1.5 text-sm rounded-lg flex items-center gap-1 ${
+                                project.isPublic
+                                  ? 'bg-purple-100 text-purple-700 hover:bg-purple-200'
+                                  : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                              }`}
+                              title={project.isPublic ? 'Stop sharing' : 'Share project'}
+                            >
+                              {sharingProjectId === project.id ? (
+                                <Loader2 className="w-4 h-4 animate-spin" />
+                              ) : (
+                                <Share2 className="w-4 h-4" />
+                              )}
+                              {project.isPublic ? 'Shared' : 'Share'}
                             </button>
                             <button
                               onClick={() => startRenaming(project)}
