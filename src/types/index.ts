@@ -1,11 +1,50 @@
 import { DefaultSession } from 'next-auth';
 
+// User roles enum - mirrors Prisma enum
+export enum UserRole {
+  USER = 'USER',
+  ADMIN = 'ADMIN',
+  SUPER_ADMIN = 'SUPER_ADMIN',
+}
+
 declare module 'next-auth' {
   interface Session {
     user: {
       id: string;
+      role: UserRole;
     } & DefaultSession['user'];
   }
+
+  interface User {
+    role: UserRole;
+  }
+}
+
+declare module 'next-auth/jwt' {
+  interface JWT {
+    id: string;
+    role: UserRole;
+  }
+}
+
+// Admin-specific types
+export interface AdminUser {
+  id: string;
+  email: string;
+  name: string | null;
+  role: UserRole;
+  createdAt: Date;
+  lastActiveAt: Date | null;
+  projectCount: number;
+  generationCount: number;
+  totalTokensUsed: number;
+}
+
+export interface AdminUserStats {
+  totalUsers: number;
+  totalProjects: number;
+  totalGenerations: number;
+  usersThisMonth: number;
 }
 
 export interface ConfigInput {

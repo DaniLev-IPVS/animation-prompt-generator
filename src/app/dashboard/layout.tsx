@@ -2,12 +2,14 @@ import { redirect } from 'next/navigation';
 import Link from 'next/link';
 import Image from 'next/image';
 import { auth, signOut } from '@/lib/auth';
+import { UserRole } from '@/types';
 import {
   Sparkles,
   Settings,
   History,
   LogOut,
   User,
+  Shield,
 } from 'lucide-react';
 
 export default async function DashboardLayout({
@@ -20,6 +22,10 @@ export default async function DashboardLayout({
   if (!session?.user) {
     redirect('/auth/login');
   }
+
+  // Check if user is admin or super admin
+  const isAdmin = session.user.role === UserRole.ADMIN ||
+                  session.user.role === UserRole.SUPER_ADMIN;
 
   return (
     <div className="min-h-screen bg-theme-primary">
@@ -68,6 +74,17 @@ export default async function DashboardLayout({
                 <Settings className="w-4 h-4" />
                 <span className="hidden sm:inline">Settings</span>
               </Link>
+
+              {/* Admin Tab - Only visible to admins */}
+              {isAdmin && (
+                <Link
+                  href="/dashboard/admin"
+                  className="flex items-center gap-2 px-4 py-2 text-purple-400 hover:bg-purple-500/10 rounded-lg transition-colors"
+                >
+                  <Shield className="w-4 h-4" />
+                  <span className="hidden sm:inline">Admin</span>
+                </Link>
+              )}
 
               <div className="h-6 w-px bg-theme-primary mx-2" />
 

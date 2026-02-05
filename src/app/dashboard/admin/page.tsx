@@ -1,0 +1,332 @@
+'use client';
+
+import { useState, useEffect } from 'react';
+import { useSession } from 'next-auth/react';
+import Link from 'next/link';
+import {
+  Users,
+  FolderOpen,
+  Zap,
+  UserPlus,
+  Loader2,
+  Search,
+  Shield,
+  ShieldCheck,
+  User,
+  ExternalLink,
+  ChevronLeft,
+  ChevronRight,
+} from 'lucide-react';
+import { UserRole } from '@/types';
+
+interface AdminUser {
+  id: string;
+  email: string;
+  name: string | null;
+  role: UserRole;
+  createdAt: string;
+  lastActiveAt: string | null;
+  projectCount: number;
+  generationCount: number;
+  totalTokensUsed: number;
+}
+
+interface AdminUserStats {
+  totalUsers: number;
+  totalProjects: number;
+  totalGenerations: number;
+  usersThisMonth: number;
+}
+
+export default function AdminPage() {
+  const { data: session } = useSession();
+  const [users, setUsers] = useState<AdminUser[]>([]);
+  const [stats, setStats] = useState<AdminUserStats | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [search, setSearch] = useState('');
+  const [page, setPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const [updatingUserId, setUpdatingUserId] = useState<string | null>(null);
+
+  const isSuperAdmin = session?.user?.role === UserRole.SUPER_ADMIN;
+
+  useEffect(() => {
+    loadUsers();
+  }, [page]);
+
+  // Debounced search
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setPage(1);
+      loadUsers();
+    }, 300);
+    return () => clearTimeout(timer);
+  }, [search]);
+
+  const loadUsers = async () => {
+    try {
+      const params = new URLSearchParams({
+        page: page.toString(),
+        limit: '20',
+        ...(search && { search }),
+      });
+
+      const response = await fetch(`/api/admin/users?${params}`);
+      if (response.ok) {
+        const data = await response.json();
+        setUsers(data.users);
+        setStats(data.stats);
+        setTotalPages(data.pagination.totalPages);
+      }
+    } catch (error) {
+      console.error('Failed to load users:', error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const toggleRole = async (userId: string, currentRole: UserRole) => {
+    if (!isSuperAdmin) return;
+
+    setUpdatingUserId(userId);
+    try {
+      const newRole = currentRole === UserRole.USER ? UserRole.ADMIN : UserRole.USER;
+      const response = await fetch(`/api/admin/users/${userId}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ role: newRole }),
+      });
+
+      if (response.ok) {
+        setUsers(users.map(u =>
+          u.id === userId ? { ...u, role: newRole } : u
+        ));
+      }
+    } catch (error) {
+      console.error('Failed to update role:', error);
+    } finally {
+      setUpdatingUserId(null);
+    }
+  };
+
+  const getRoleIcon = (role: UserRole) => {
+    switch (role) {
+      case UserRole.SUPER_ADMIN:
+        return <ShieldCheck className="w-4 h-4 text-purple-400" />;
+      case UserRole.ADMIN:
+        return <Shield className="w-4 h-4 text-blue-400" />;
+      default:
+        return <User className="w-4 h-4 text-gray-400" />;
+    }
+  };
+
+  const getRoleBadge = (role: UserRole) => {
+    const styles = {
+      [UserRole.SUPER_ADMIN]: 'bg-purple-500/20 text-purple-400 border-purple-500/30',
+      [UserRole.ADMIN]: 'bg-blue-500/20 text-blue-400 border-blue-500/30',
+      [UserRole.USER]: 'bg-gray-500/20 text-theme-muted border-gray-500/30',
+    };
+    const labels = {
+      [UserRole.SUPER_ADMIN]: 'Super Admin',
+      [UserRole.ADMIN]: 'Admin',
+      [UserRole.USER]: 'User',
+    };
+    return (
+      <span className={`px-2 py-1 text-xs rounded-full border ${styles[role]}`}>
+        {labels[role]}
+      </span>
+    );
+  };
+
+  if (isLoading) {
+    return (
+      <div className="p-6 flex items-center justify-center min-h-[400px]">
+        <Loader2 className="w-8 h-8 animate-spin text-purple-600" />
+      </div>
+    );
+  }
+
+  return (
+    <div className="p-6 max-w-7xl mx-auto">
+      <h1 className="text-2xl font-bold text-theme-primary mb-6">Admin Dashboard</h1>
+
+      {/* Stats Cards */}
+      {stats && (
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+          <StatCard
+            icon={<Users className="w-5 h-5" />}
+            label="Total Users"
+            value={stats.totalUsers}
+            color="purple"
+          />
+          <StatCard
+            icon={<FolderOpen className="w-5 h-5" />}
+            label="Total Projects"
+            value={stats.totalProjects}
+            color="blue"
+          />
+          <StatCard
+            icon={<Zap className="w-5 h-5" />}
+            label="Total Generations"
+            value={stats.totalGenerations}
+            color="green"
+          />
+          <StatCard
+            icon={<UserPlus className="w-5 h-5" />}
+            label="New This Month"
+            value={stats.usersThisMonth}
+            color="orange"
+          />
+        </div>
+      )}
+
+      {/* Search */}
+      <div className="mb-6">
+        <div className="relative">
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-theme-muted" />
+          <input
+            type="text"
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            placeholder="Search users by email or name..."
+            className="w-full pl-10 pr-4 py-3 bg-theme-secondary border border-theme-primary rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none text-theme-primary placeholder-theme-muted"
+          />
+        </div>
+      </div>
+
+      {/* Users Table */}
+      <div className="bg-theme-secondary rounded-xl border border-theme-primary overflow-hidden">
+        <div className="overflow-x-auto">
+          <table className="w-full">
+            <thead>
+              <tr className="border-b border-theme-primary bg-theme-tertiary">
+                <th className="text-left px-4 py-3 text-sm font-semibold text-theme-secondary">User</th>
+                <th className="text-left px-4 py-3 text-sm font-semibold text-theme-secondary">Role</th>
+                <th className="text-center px-4 py-3 text-sm font-semibold text-theme-secondary">Projects</th>
+                <th className="text-center px-4 py-3 text-sm font-semibold text-theme-secondary">Generations</th>
+                <th className="text-center px-4 py-3 text-sm font-semibold text-theme-secondary">Tokens</th>
+                <th className="text-left px-4 py-3 text-sm font-semibold text-theme-secondary">Signed Up</th>
+                <th className="text-left px-4 py-3 text-sm font-semibold text-theme-secondary">Last Active</th>
+                {isSuperAdmin && (
+                  <th className="text-center px-4 py-3 text-sm font-semibold text-theme-secondary">Actions</th>
+                )}
+              </tr>
+            </thead>
+            <tbody>
+              {users.map((user) => (
+                <tr key={user.id} className="border-b border-theme-primary hover:bg-theme-tertiary">
+                  <td className="px-4 py-3">
+                    <div className="flex items-center gap-2">
+                      {getRoleIcon(user.role)}
+                      <div>
+                        <div className="font-medium text-theme-primary">{user.email}</div>
+                        {user.name && (
+                          <div className="text-sm text-theme-muted">{user.name}</div>
+                        )}
+                      </div>
+                    </div>
+                  </td>
+                  <td className="px-4 py-3">{getRoleBadge(user.role)}</td>
+                  <td className="px-4 py-3 text-center text-theme-secondary">{user.projectCount}</td>
+                  <td className="px-4 py-3 text-center text-theme-secondary">{user.generationCount}</td>
+                  <td className="px-4 py-3 text-center text-theme-secondary">
+                    {user.totalTokensUsed.toLocaleString()}
+                  </td>
+                  <td className="px-4 py-3 text-sm text-theme-muted">
+                    {new Date(user.createdAt).toLocaleDateString()}
+                  </td>
+                  <td className="px-4 py-3 text-sm text-theme-muted">
+                    {user.lastActiveAt
+                      ? new Date(user.lastActiveAt).toLocaleDateString()
+                      : 'Never'
+                    }
+                  </td>
+                  {isSuperAdmin && (
+                    <td className="px-4 py-3">
+                      <div className="flex items-center justify-center gap-2">
+                        {user.role !== UserRole.SUPER_ADMIN && (
+                          <button
+                            onClick={() => toggleRole(user.id, user.role)}
+                            disabled={updatingUserId === user.id}
+                            className="px-3 py-1 text-xs bg-blue-500/20 text-blue-400 hover:bg-blue-500/30 rounded transition-colors disabled:opacity-50"
+                          >
+                            {updatingUserId === user.id ? (
+                              <Loader2 className="w-3 h-3 animate-spin" />
+                            ) : (
+                              user.role === UserRole.ADMIN ? 'Demote' : 'Make Admin'
+                            )}
+                          </button>
+                        )}
+                        <Link
+                          href={`/dashboard/admin/users/${user.id}`}
+                          className="p-1 text-theme-muted hover:text-purple-400 transition-colors"
+                          title="View user details"
+                        >
+                          <ExternalLink className="w-4 h-4" />
+                        </Link>
+                      </div>
+                    </td>
+                  )}
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+
+        {/* Pagination */}
+        {totalPages > 1 && (
+          <div className="flex items-center justify-between px-4 py-3 border-t border-theme-primary">
+            <button
+              onClick={() => setPage(p => Math.max(1, p - 1))}
+              disabled={page === 1}
+              className="flex items-center gap-1 px-3 py-1 text-sm text-theme-secondary hover:text-purple-400 disabled:opacity-50 disabled:hover:text-theme-secondary"
+            >
+              <ChevronLeft className="w-4 h-4" />
+              Previous
+            </button>
+            <span className="text-sm text-theme-muted">
+              Page {page} of {totalPages}
+            </span>
+            <button
+              onClick={() => setPage(p => Math.min(totalPages, p + 1))}
+              disabled={page === totalPages}
+              className="flex items-center gap-1 px-3 py-1 text-sm text-theme-secondary hover:text-purple-400 disabled:opacity-50 disabled:hover:text-theme-secondary"
+            >
+              Next
+              <ChevronRight className="w-4 h-4" />
+            </button>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
+function StatCard({
+  icon,
+  label,
+  value,
+  color,
+}: {
+  icon: React.ReactNode;
+  label: string;
+  value: number;
+  color: 'purple' | 'blue' | 'green' | 'orange';
+}) {
+  const colorStyles = {
+    purple: 'bg-purple-500/20 text-purple-400',
+    blue: 'bg-blue-500/20 text-blue-400',
+    green: 'bg-green-500/20 text-green-400',
+    orange: 'bg-orange-500/20 text-orange-400',
+  };
+
+  return (
+    <div className="bg-theme-secondary rounded-xl border border-theme-primary p-4">
+      <div className={`w-10 h-10 rounded-lg flex items-center justify-center mb-3 ${colorStyles[color]}`}>
+        {icon}
+      </div>
+      <div className="text-2xl font-bold text-theme-primary">{value.toLocaleString()}</div>
+      <div className="text-sm text-theme-muted">{label}</div>
+    </div>
+  );
+}
