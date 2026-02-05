@@ -1,7 +1,8 @@
 import { redirect } from 'next/navigation';
 import Link from 'next/link';
+import Image from 'next/image';
 import { auth } from '@/lib/auth';
-import { Sparkles, Zap, Shield, Share2 } from 'lucide-react';
+import { Zap, Shield, Share2 } from 'lucide-react';
 
 export default async function HomePage() {
   const session = await auth();
@@ -17,12 +18,22 @@ export default async function HomePage() {
       {/* Header */}
       <header className="container mx-auto px-4 py-6">
         <nav className="flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <Sparkles className="w-8 h-8 text-purple-600" />
-            <span className="text-xl font-bold text-gray-800">
-              Animation Prompt Generator
-            </span>
-          </div>
+          <Link href="/" className="flex items-center gap-2">
+            <Image
+              src="/images/IP Ventures Logomark Black.png"
+              alt="IP Ventures"
+              width={40}
+              height={40}
+              className="sm:hidden"
+            />
+            <Image
+              src="/images/IP Ventures Long Logo Full Black.svg"
+              alt="IP Ventures"
+              width={180}
+              height={48}
+              className="hidden sm:block"
+            />
+          </Link>
           <div className="flex items-center gap-4">
             <Link
               href="/auth/login"
@@ -56,7 +67,6 @@ export default async function HomePage() {
               href="/auth/register"
               className="px-8 py-4 bg-purple-600 text-white rounded-xl text-lg font-semibold hover:bg-purple-700 transition-colors flex items-center gap-2"
             >
-              <Sparkles className="w-5 h-5" />
               Start Creating
             </Link>
             <Link
