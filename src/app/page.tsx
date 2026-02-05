@@ -2,22 +2,13 @@ import { redirect } from 'next/navigation';
 import Link from 'next/link';
 import { auth } from '@/lib/auth';
 import { Sparkles, Zap, Shield, Share2 } from 'lucide-react';
-import AnimationGenerator from '@/components/generator/AnimationGenerator';
-import DashboardHeader from '@/components/DashboardHeader';
 
 export default async function HomePage() {
   const session = await auth();
 
-  // If logged in, show the dashboard
+  // If logged in, redirect to dashboard
   if (session?.user) {
-    return (
-      <div className="min-h-screen bg-gradient-to-br from-purple-50 to-blue-50">
-        <DashboardHeader user={session.user} />
-        <main>
-          <AnimationGenerator />
-        </main>
-      </div>
-    );
+    redirect('/dashboard');
   }
 
   // If not logged in, show landing page
@@ -34,13 +25,13 @@ export default async function HomePage() {
           </div>
           <div className="flex items-center gap-4">
             <Link
-              href="/login"
+              href="/auth/login"
               className="px-4 py-2 text-gray-700 hover:text-purple-600 transition-colors"
             >
               Sign In
             </Link>
             <Link
-              href="/register"
+              href="/auth/register"
               className="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors"
             >
               Get Started
@@ -62,14 +53,14 @@ export default async function HomePage() {
           </p>
           <div className="flex items-center justify-center gap-4">
             <Link
-              href="/register"
+              href="/auth/register"
               className="px-8 py-4 bg-purple-600 text-white rounded-xl text-lg font-semibold hover:bg-purple-700 transition-colors flex items-center gap-2"
             >
               <Sparkles className="w-5 h-5" />
               Start Creating
             </Link>
             <Link
-              href="/login"
+              href="/auth/login"
               className="px-8 py-4 bg-white text-purple-600 border-2 border-purple-600 rounded-xl text-lg font-semibold hover:bg-purple-50 transition-colors"
             >
               Sign In

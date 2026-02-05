@@ -18,7 +18,7 @@ export default async function DashboardLayout({
   const session = await auth();
 
   if (!session?.user) {
-    redirect('/login');
+    redirect('/auth/login');
   }
 
   return (
@@ -27,7 +27,7 @@ export default async function DashboardLayout({
       <header className="bg-white border-b shadow-sm sticky top-0 z-50">
         <div className="container mx-auto px-4">
           <div className="flex items-center justify-between h-16">
-            <Link href="/" className="flex items-center gap-2">
+            <Link href="/dashboard" className="flex items-center gap-2">
               <Sparkles className="w-7 h-7 text-purple-600" />
               <span className="text-lg font-bold text-gray-800">
                 Animation Prompt Generator
@@ -36,28 +36,28 @@ export default async function DashboardLayout({
 
             <nav className="flex items-center gap-1">
               <Link
-                href="/"
+                href="/dashboard"
                 className="flex items-center gap-2 px-4 py-2 text-gray-700 hover:bg-purple-50 rounded-lg transition-colors"
               >
                 <Sparkles className="w-4 h-4" />
                 <span className="hidden sm:inline">Generator</span>
               </Link>
               <Link
-                href="/projects"
+                href="/dashboard/projects"
                 className="flex items-center gap-2 px-4 py-2 text-gray-700 hover:bg-purple-50 rounded-lg transition-colors"
               >
                 <FolderOpen className="w-4 h-4" />
                 <span className="hidden sm:inline">Projects</span>
               </Link>
               <Link
-                href="/history"
+                href="/dashboard/history"
                 className="flex items-center gap-2 px-4 py-2 text-gray-700 hover:bg-purple-50 rounded-lg transition-colors"
               >
                 <History className="w-4 h-4" />
                 <span className="hidden sm:inline">History</span>
               </Link>
               <Link
-                href="/settings"
+                href="/dashboard/settings"
                 className="flex items-center gap-2 px-4 py-2 text-gray-700 hover:bg-purple-50 rounded-lg transition-colors"
               >
                 <Settings className="w-4 h-4" />
@@ -76,7 +76,7 @@ export default async function DashboardLayout({
                 <form
                   action={async () => {
                     'use server';
-                    await signOut({ redirectTo: '/login' });
+                    await signOut({ redirectTo: '/auth/login' });
                   }}
                 >
                   <button

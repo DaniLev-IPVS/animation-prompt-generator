@@ -56,7 +56,7 @@ export default function RegisterPage() {
       if (result?.error) {
         setError('Registration successful, but sign in failed. Please try logging in.');
       } else {
-        router.push('/');
+        router.push('/dashboard');
         router.refresh();
       }
     } catch {
@@ -181,7 +181,7 @@ export default function RegisterPage() {
         <p className="mt-6 text-center text-gray-600">
           Already have an account?{' '}
           <Link
-            href="/login"
+            href="/auth/login"
             className="text-purple-600 font-semibold hover:underline"
           >
             Sign in
