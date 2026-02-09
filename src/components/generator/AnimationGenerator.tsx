@@ -71,8 +71,6 @@ export default function AnimationGenerator() {
   const [editingShotField, setEditingShotField] = useState<string | null>(null);
   const [editingShotValue, setEditingShotValue] = useState('');
   const [regeneratingId, setRegeneratingId] = useState<string | null>(null);
-  const [regenInstructions, setRegenInstructions] = useState<Record<string, string>>({});
-  const [showRegenInput, setShowRegenInput] = useState<string | null>(null);
 
   // Projects list state
   interface ProjectListItem {
@@ -1298,7 +1296,6 @@ No motion verbs. Always provide BOTH.`,
   const regenerateShot = async (shot: Shot, instructions = '') => {
     const regenId = `shot-${shot.scene}-${shot.shotNumber}`;
     setRegeneratingId(regenId);
-    setShowRegenInput(null);
     try {
       const instructionText = instructions ? `\n\nUser instructions: ${instructions}` : '';
       const sceneInfo = projectData.metadata?.scenePlan?.scenes?.find(s => s.scene === shot.scene);
@@ -1349,12 +1346,10 @@ Create a NEW version of this shot.` }],
       }));
     } catch { /* ignore */ }
     setRegeneratingId(null);
-    setRegenInstructions(prev => ({ ...prev, [regenId]: '' }));
   };
 
   const regenerateStyle = async (instructions = '') => {
     setRegeneratingId('style');
-    setShowRegenInput(null);
     try {
       const styleInput = configInput.stylePreference || 'Modern 2D Animation';
       const instructionText = instructions ? `\n\nUser instructions: ${instructions}` : '';
@@ -1377,12 +1372,10 @@ Create a NEW version of this shot.` }],
       }));
     } catch { /* ignore */ }
     setRegeneratingId(null);
-    setRegenInstructions(prev => ({ ...prev, style: '' }));
   };
 
   const regenerateCharacter = async (char: Character, instructions = '') => {
     setRegeneratingId(char.id);
-    setShowRegenInput(null);
     try {
       const instructionText = instructions ? `\n\nUser instructions: ${instructions}` : '';
       const roleMatch = char.name.match(/\[(PROTAGONIST|ANTAGONIST|SECONDARY|TERTIARY|ANTIHERO)\]/i);
@@ -1401,12 +1394,10 @@ Create a NEW version of this shot.` }],
       }));
     } catch { /* ignore */ }
     setRegeneratingId(null);
-    setRegenInstructions(prev => ({ ...prev, [char.id]: '' }));
   };
 
   const regenerateBackground = async (bg: Background, instructions = '') => {
     setRegeneratingId(bg.id);
-    setShowRegenInput(null);
     try {
       const instructionText = instructions ? `\n\nUser instructions: ${instructions}` : '';
       const data = await callAnthropic({
@@ -1420,12 +1411,10 @@ Create a NEW version of this shot.` }],
       setProjectData(prev => ({ ...prev, stage5: prev.stage5.map(b => b.id === bg.id ? { ...b, visualPrompt: out } : b) }));
     } catch { /* ignore */ }
     setRegeneratingId(null);
-    setRegenInstructions(prev => ({ ...prev, [bg.id]: '' }));
   };
 
   const regenerateItem = async (item: Item, instructions = '') => {
     setRegeneratingId(item.id);
-    setShowRegenInput(null);
     try {
       const instructionText = instructions ? `\n\nUser instructions: ${instructions}` : '';
       const data = await callAnthropic({
@@ -1437,13 +1426,11 @@ Create a NEW version of this shot.` }],
       setProjectData(prev => ({ ...prev, stage6: prev.stage6.map(i => i.id === item.id ? { ...i, visualPrompt: cleanAsterisks(data.content?.[0]?.text || "") } : i) }));
     } catch { /* ignore */ }
     setRegeneratingId(null);
-    setRegenInstructions(prev => ({ ...prev, [item.id]: '' }));
   };
 
   const regenerateFrame = async (frame: Frame, field: 'firstFrame' | 'lastFrame', instructions = '') => {
     const frameId = `${frame.id}-${field}`;
     setRegeneratingId(frameId);
-    setShowRegenInput(null);
     try {
       const shot = projectData.stage2.find(s => s.scene === frame.scene && s.shotNumber === frame.shotNumber);
       const instructionText = instructions ? `\n\nUser instructions: ${instructions}` : '';
@@ -1458,12 +1445,10 @@ Create a NEW version of this shot.` }],
       setProjectData(prev => ({ ...prev, stage7: prev.stage7.map(f => f.id === frame.id ? { ...f, [field]: cleanAsterisks(data.content?.[0]?.text || "") } : f) }));
     } catch { /* ignore */ }
     setRegeneratingId(null);
-    setRegenInstructions(prev => ({ ...prev, [frameId]: '' }));
   };
 
   const regenerateAnimation = async (anim: Animation, instructions = '') => {
     setRegeneratingId(anim.id);
-    setShowRegenInput(null);
     try {
       const shot = projectData.stage2.find(s => s.scene === anim.scene && s.shotNumber === anim.shotNumber);
       const instructionText = instructions ? `\n\nUser instructions: ${instructions}` : '';
@@ -1476,7 +1461,6 @@ Create a NEW version of this shot.` }],
       setProjectData(prev => ({ ...prev, stage8: prev.stage8.map(a => a.id === anim.id ? { ...a, animationPrompt: cleanAsterisks(data.content?.[0]?.text || "") } : a) }));
     } catch { /* ignore */ }
     setRegeneratingId(null);
-    setRegenInstructions(prev => ({ ...prev, [anim.id]: '' }));
   };
 
   // Regenerate all characters (Stage 4)
@@ -1662,36 +1646,47 @@ Create a NEW version of this shot.` }],
     cancelEditing();
   };
 
-  // RegenButton component
+  // RegenButton component with local state to prevent cursor issues
   const RegenButton = ({ id, label, onRegenerate }: { id: string; label?: string; onRegenerate: (instructions: string) => void }) => {
+    const [localInput, setLocalInput] = useState('');
+    const [isOpen, setIsOpen] = useState(false);
     const isRegenerating = regeneratingId === id;
-    const isShowingInput = showRegenInput === id;
 
-    if (isShowingInput) {
+    const handleRegenerate = (useInput: boolean) => {
+      onRegenerate(useInput ? localInput : '');
+      setLocalInput('');
+      setIsOpen(false);
+    };
+
+    const handleCancel = () => {
+      setLocalInput('');
+      setIsOpen(false);
+    };
+
+    if (isOpen) {
       return (
         <div className="mt-2 p-2 bg-blue-50 dark:bg-blue-900/30 border border-blue-200 dark:border-blue-700 rounded-lg">
           <p className="text-xs text-blue-700 dark:text-blue-300 mb-1 font-medium">What would you like to change?</p>
           <textarea
-            dir="ltr"
-            value={regenInstructions[id] || ''}
-            onChange={e => setRegenInstructions(prev => ({ ...prev, [id]: e.target.value }))}
+            value={localInput}
+            onChange={e => setLocalInput(e.target.value)}
             placeholder="e.g., Make the character older..."
             className="w-full p-2 text-sm bg-theme-input border border-theme-primary rounded min-h-[50px] mb-2 text-theme-primary"
             autoFocus
           />
           <div className="flex gap-2">
-            <button onClick={() => onRegenerate(regenInstructions[id] || '')} className="px-3 py-1 bg-blue-600 text-white text-xs rounded flex items-center gap-1">
+            <button onClick={() => handleRegenerate(true)} className="px-3 py-1 bg-blue-600 text-white text-xs rounded flex items-center gap-1">
               <RefreshCw className="w-3 h-3" />Regenerate
             </button>
-            <button onClick={() => onRegenerate('')} className="px-3 py-1 bg-theme-tertiary text-theme-secondary text-xs rounded">Random</button>
-            <button onClick={() => { setShowRegenInput(null); setRegenInstructions(prev => ({ ...prev, [id]: '' })); }} className="px-3 py-1 bg-theme-tertiary text-theme-muted text-xs rounded">Cancel</button>
+            <button onClick={() => handleRegenerate(false)} className="px-3 py-1 bg-theme-tertiary text-theme-secondary text-xs rounded">Random</button>
+            <button onClick={handleCancel} className="px-3 py-1 bg-theme-tertiary text-theme-muted text-xs rounded">Cancel</button>
           </div>
         </div>
       );
     }
 
     return (
-      <button onClick={() => setShowRegenInput(id)} disabled={isRegenerating} className="px-2 py-1 text-xs rounded bg-blue-100 hover:bg-blue-200 text-blue-700 flex items-center gap-1 disabled:opacity-50">
+      <button onClick={() => setIsOpen(true)} disabled={isRegenerating} className="px-2 py-1 text-xs rounded bg-blue-100 hover:bg-blue-200 text-blue-700 flex items-center gap-1 disabled:opacity-50">
         {isRegenerating ? <Loader2 className="w-3 h-3 animate-spin" /> : <RefreshCw className="w-3 h-3" />}
         {isRegenerating ? 'Regenerating...' : (label || 'Regen')}
       </button>
