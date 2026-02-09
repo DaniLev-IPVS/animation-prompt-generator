@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { auth } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
+import { UserRole } from '@/types';
 
 export async function GET(
   request: NextRequest,
@@ -14,11 +15,13 @@ export async function GET(
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
+    const isAdmin = session.user.role === UserRole.ADMIN || session.user.role === UserRole.SUPER_ADMIN;
+
+    // Admins can view any project, regular users can only view their own
     const project = await prisma.project.findFirst({
-      where: {
-        id,
-        userId: session.user.id,
-      },
+      where: isAdmin
+        ? { id }
+        : { id, userId: session.user.id },
     });
 
     if (!project) {
@@ -47,11 +50,13 @@ export async function PUT(
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
+    const isAdmin = session.user.role === UserRole.ADMIN || session.user.role === UserRole.SUPER_ADMIN;
+
+    // Admins can edit any project, regular users can only edit their own
     const existingProject = await prisma.project.findFirst({
-      where: {
-        id,
-        userId: session.user.id,
-      },
+      where: isAdmin
+        ? { id }
+        : { id, userId: session.user.id },
     });
 
     if (!existingProject) {

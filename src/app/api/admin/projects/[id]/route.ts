@@ -16,7 +16,7 @@ export async function GET(
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    if (session.user.role !== UserRole.SUPER_ADMIN) {
+    if (session.user.role !== UserRole.ADMIN && session.user.role !== UserRole.SUPER_ADMIN) {
       return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
     }
 
@@ -47,7 +47,7 @@ export async function GET(
   }
 }
 
-// PUT - Super admin can edit any project
+// PUT - Admin/Super admin can edit any project
 export async function PUT(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
@@ -60,7 +60,7 @@ export async function PUT(
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    if (session.user.role !== UserRole.SUPER_ADMIN) {
+    if (session.user.role !== UserRole.ADMIN && session.user.role !== UserRole.SUPER_ADMIN) {
       return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
     }
 

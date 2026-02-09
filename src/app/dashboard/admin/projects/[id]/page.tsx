@@ -50,15 +50,15 @@ export default function AdminProjectEditPage({ params }: { params: Promise<{ id:
   const [name, setName] = useState('');
   const [scriptInput, setScriptInput] = useState('');
 
-  const isSuperAdmin = session?.user?.role === UserRole.SUPER_ADMIN;
+  const isAdmin = session?.user?.role === UserRole.ADMIN || session?.user?.role === UserRole.SUPER_ADMIN;
 
   useEffect(() => {
-    if (!isSuperAdmin) {
+    if (!isAdmin) {
       router.push('/dashboard/admin');
       return;
     }
     loadProject();
-  }, [resolvedParams.id, isSuperAdmin]);
+  }, [resolvedParams.id, isAdmin]);
 
   const loadProject = async () => {
     try {
