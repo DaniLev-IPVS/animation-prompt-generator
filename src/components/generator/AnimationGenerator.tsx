@@ -1264,12 +1264,12 @@ No motion verbs. Always provide BOTH.`,
 
         // Include dialogue if present
         const dialogueInfo = shot.dialogue
-          ? `\n\nDIALOGUE IN THIS SHOT (MUST incorporate character speaking/lip movement):\n${shot.dialogue}`
+          ? `\n\nDIALOGUE IN THIS SHOT:\n${shot.dialogue}`
           : '';
 
         const data = await callAnthropic({
           max_tokens: 500,
-          system: `Create animation prompt describing motion. One paragraph. CRITICAL: When characters are listed, refer to each character by their EXACT NAME. Never say "the characters" or use generic terms - always use each character's specific name.${shot.dialogue ? ' IMPORTANT: This shot contains dialogue - you MUST describe the speaking character\'s mouth movements, facial expressions, and gestures while delivering their lines.' : ''}`,
+          system: `Create animation prompt describing motion. One paragraph. CRITICAL: When characters are listed, refer to each character by their EXACT NAME. Never say "the characters" or use generic terms - always use each character's specific name.${shot.dialogue ? ` CRITICAL DIALOGUE REQUIREMENT: This shot has dialogue. You MUST include the EXACT dialogue text in quotes within your animation prompt, along with description of the character speaking (mouth moving, facial expressions, gestures). The dialogue "${shot.dialogue.replace(/"/g, "'")}" MUST appear in your output.` : ''}`,
           messages: [{ role: 'user', content: `Duration: ${shot.timing}s\nDescription: ${shot.description}${charList}${dialogueInfo}` }],
           stage: 'animation',
           projectId: currentProjectId,
@@ -1469,12 +1469,12 @@ Create a NEW version of this shot.` }],
 
       // Include dialogue if present
       const dialogueInfo = shot?.dialogue
-        ? `\n\nDIALOGUE (MUST incorporate speaking/lip movement):\n${shot.dialogue}`
+        ? `\n\nDIALOGUE:\n${shot.dialogue}`
         : '';
 
       const data = await callAnthropic({
         max_tokens: 500,
-        system: `Create animation prompt describing motion. One paragraph. Name each character explicitly.${shot?.dialogue ? ' IMPORTANT: This shot contains dialogue - describe the speaking character\'s mouth movements, facial expressions, and gestures while delivering their lines.' : ''}`,
+        system: `Create animation prompt describing motion. One paragraph. Name each character explicitly.${shot?.dialogue ? ` CRITICAL DIALOGUE REQUIREMENT: This shot has dialogue. You MUST include the EXACT dialogue text in quotes within your animation prompt, along with description of the character speaking (mouth moving, facial expressions, gestures). The dialogue "${shot.dialogue.replace(/"/g, "'")}" MUST appear in your output.` : ''}`,
         messages: [{ role: 'user', content: `Duration: ${anim.duration}s\nDescription: ${shot?.description}${charList}${dialogueInfo}${instructionText}` }],
         stage: 'animation-regen',
       });
@@ -1614,12 +1614,12 @@ Create a NEW version of this shot.` }],
 
         // Include dialogue if present
         const dialogueInfo = shot.dialogue
-          ? `\n\nDIALOGUE (MUST incorporate speaking/lip movement):\n${shot.dialogue}`
+          ? `\n\nDIALOGUE:\n${shot.dialogue}`
           : '';
 
         const data = await callAnthropic({
           max_tokens: 500,
-          system: `Create animation prompt describing motion. One paragraph. Name each character explicitly.${shot.dialogue ? ' IMPORTANT: This shot contains dialogue - describe the speaking character\'s mouth movements, facial expressions, and gestures while delivering their lines.' : ''}`,
+          system: `Create animation prompt describing motion. One paragraph. Name each character explicitly.${shot.dialogue ? ` CRITICAL DIALOGUE REQUIREMENT: This shot has dialogue. You MUST include the EXACT dialogue text in quotes within your animation prompt, along with description of the character speaking (mouth moving, facial expressions, gestures). The dialogue "${shot.dialogue.replace(/"/g, "'")}" MUST appear in your output.` : ''}`,
           messages: [{ role: 'user', content: `Duration: ${shot.timing}s\nDescription: ${shot.description}${charList}${dialogueInfo}` }],
           stage: 'animation-regen',
         });
