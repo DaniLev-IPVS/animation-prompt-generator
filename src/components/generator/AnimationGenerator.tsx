@@ -1669,9 +1669,10 @@ Create a NEW version of this shot.` }],
 
     if (isShowingInput) {
       return (
-        <div className="mt-2 p-2 bg-blue-50 border border-blue-200 rounded-lg">
-          <p className="text-xs text-blue-700 mb-1 font-medium">What would you like to change?</p>
+        <div className="mt-2 p-2 bg-blue-50 dark:bg-blue-900/30 border border-blue-200 dark:border-blue-700 rounded-lg">
+          <p className="text-xs text-blue-700 dark:text-blue-300 mb-1 font-medium">What would you like to change?</p>
           <textarea
+            dir="ltr"
             value={regenInstructions[id] || ''}
             onChange={e => setRegenInstructions(prev => ({ ...prev, [id]: e.target.value }))}
             placeholder="e.g., Make the character older..."
@@ -2573,7 +2574,7 @@ Create a NEW version of this shot.` }],
                     <button
                       onClick={(e) => { e.stopPropagation(); regenerateAllBackgrounds(); }}
                       disabled={isGenerating || regeneratingId === 'stage5-all'}
-                      className="px-3 py-1 text-xs bg-green-100 text-green-700 rounded hover:bg-green-200 disabled:opacity-50 flex items-center gap-1"
+                      className="px-3 py-1 text-xs bg-green-100 dark:bg-green-900/50 text-green-700 dark:text-green-300 rounded hover:bg-green-200 dark:hover:bg-green-800/50 disabled:opacity-50 flex items-center gap-1"
                     >
                       {regeneratingId === 'stage5-all' ? <Loader2 className="w-3 h-3 animate-spin" /> : <RefreshCw className="w-3 h-3" />}
                       Regen All
@@ -2789,9 +2790,10 @@ Create a NEW version of this shot.` }],
                                 )}
                                 {refs.backgrounds.length > 0 && (
                                   <div className="flex items-center gap-1">
-                                    <span className="text-xs text-theme-muted">BG:</span>
-                                    {refs.backgrounds.map(bg => (
-                                      <button key={bg.id} onClick={() => scrollToRef(`bg-${bg.id}`)} className="text-xs bg-green-100 text-green-700 px-1.5 py-0.5 rounded hover:bg-green-200">
+                                    <span className="text-xs text-theme-muted">BG{refs.backgrounds.length > 1 ? 's' : ''}:</span>
+                                    {refs.backgrounds.map((bg, idx) => (
+                                      <button key={bg.id} onClick={() => scrollToRef(`bg-${bg.id}`)} className="text-xs bg-green-100 dark:bg-green-900/50 text-green-700 dark:text-green-300 px-1.5 py-0.5 rounded hover:bg-green-200 dark:hover:bg-green-800/50">
+                                        {refs.backgrounds.length > 1 && <span className="font-semibold mr-1">{idx === 0 ? '1st:' : '2nd:'}</span>}
                                         {bg.name.split(' ').slice(0, 2).join(' ')}
                                       </button>
                                     ))}
