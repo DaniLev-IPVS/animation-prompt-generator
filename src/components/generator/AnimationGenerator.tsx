@@ -1262,10 +1262,15 @@ No motion verbs. Always provide BOTH.`,
           ? `\n\nCHARACTERS IN THIS SHOT (always refer to them by exact name):\n${shotChars.map(c => `- ${getCleanName(c.name)}`).join('\n')}`
           : '';
 
+        // Include dialogue if present
+        const dialogueInfo = shot.dialogue
+          ? `\n\nDIALOGUE IN THIS SHOT (MUST incorporate character speaking/lip movement):\n${shot.dialogue}`
+          : '';
+
         const data = await callAnthropic({
           max_tokens: 500,
-          system: `Create animation prompt describing motion. One paragraph. CRITICAL: When characters are listed, refer to each character by their EXACT NAME. Never say "the characters" or use generic terms - always use each character's specific name.`,
-          messages: [{ role: 'user', content: `Duration: ${shot.timing}s\nDescription: ${shot.description}${charList}` }],
+          system: `Create animation prompt describing motion. One paragraph. CRITICAL: When characters are listed, refer to each character by their EXACT NAME. Never say "the characters" or use generic terms - always use each character's specific name.${shot.dialogue ? ' IMPORTANT: This shot contains dialogue - you MUST describe the speaking character\'s mouth movements, facial expressions, and gestures while delivering their lines.' : ''}`,
+          messages: [{ role: 'user', content: `Duration: ${shot.timing}s\nDescription: ${shot.description}${charList}${dialogueInfo}` }],
           stage: 'animation',
           projectId: currentProjectId,
         });
@@ -1452,10 +1457,25 @@ Create a NEW version of this shot.` }],
     try {
       const shot = projectData.stage2.find(s => s.scene === anim.scene && s.shotNumber === anim.shotNumber);
       const instructionText = instructions ? `\n\nUser instructions: ${instructions}` : '';
+
+      // Find characters for this shot
+      const shotChars = projectData.stage4.filter(c => {
+        const cleanName = getCleanName(c.name);
+        return shot && nameMatchesInText(cleanName, shot.description);
+      });
+      const charList = shotChars.length > 0
+        ? `\n\nCHARACTERS:\n${shotChars.map(c => `- ${getCleanName(c.name)}`).join('\n')}`
+        : '';
+
+      // Include dialogue if present
+      const dialogueInfo = shot?.dialogue
+        ? `\n\nDIALOGUE (MUST incorporate speaking/lip movement):\n${shot.dialogue}`
+        : '';
+
       const data = await callAnthropic({
         max_tokens: 500,
-        system: `Create animation prompt describing motion. One paragraph.`,
-        messages: [{ role: 'user', content: `Duration: ${anim.duration}s\nDescription: ${shot?.description}${instructionText}` }],
+        system: `Create animation prompt describing motion. One paragraph. Name each character explicitly.${shot?.dialogue ? ' IMPORTANT: This shot contains dialogue - describe the speaking character\'s mouth movements, facial expressions, and gestures while delivering their lines.' : ''}`,
+        messages: [{ role: 'user', content: `Duration: ${anim.duration}s\nDescription: ${shot?.description}${charList}${dialogueInfo}${instructionText}` }],
         stage: 'animation-regen',
       });
       setProjectData(prev => ({ ...prev, stage8: prev.stage8.map(a => a.id === anim.id ? { ...a, animationPrompt: cleanAsterisks(data.content?.[0]?.text || "") } : a) }));
@@ -1592,10 +1612,15 @@ Create a NEW version of this shot.` }],
         const shotChars = projectData.stage4.filter(c => nameMatchesInText(getCleanName(c.name), shot.description));
         const charList = shotChars.length > 0 ? `\n\nCHARACTERS:\n${shotChars.map(c => `- ${getCleanName(c.name)}`).join('\n')}` : '';
 
+        // Include dialogue if present
+        const dialogueInfo = shot.dialogue
+          ? `\n\nDIALOGUE (MUST incorporate speaking/lip movement):\n${shot.dialogue}`
+          : '';
+
         const data = await callAnthropic({
           max_tokens: 500,
-          system: `Create animation prompt describing motion. One paragraph. Name each character explicitly.`,
-          messages: [{ role: 'user', content: `Duration: ${shot.timing}s\nDescription: ${shot.description}${charList}` }],
+          system: `Create animation prompt describing motion. One paragraph. Name each character explicitly.${shot.dialogue ? ' IMPORTANT: This shot contains dialogue - describe the speaking character\'s mouth movements, facial expressions, and gestures while delivering their lines.' : ''}`,
+          messages: [{ role: 'user', content: `Duration: ${shot.timing}s\nDescription: ${shot.description}${charList}${dialogueInfo}` }],
           stage: 'animation-regen',
         });
 
