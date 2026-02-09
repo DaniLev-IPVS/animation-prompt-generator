@@ -1704,7 +1704,7 @@ Create a NEW version of this shot.` }],
     if (isEditing) {
       return (
         <div className="mt-2">
-          <textarea value={editingValue} onChange={e => setEditingValue(e.target.value)} className="w-full p-2 bg-theme-input border border-theme-primary rounded text-sm font-mono min-h-[100px] text-theme-primary" autoFocus />
+          <textarea dir="ltr" value={editingValue} onChange={e => setEditingValue(e.target.value)} className="w-full p-2 bg-theme-input border border-theme-primary rounded text-sm font-mono min-h-[100px] text-theme-primary" autoFocus />
           <div className="flex gap-2 mt-2">
             <button onClick={() => saveEdit(type, id, field)} className="px-3 py-1 bg-green-600 text-white text-xs rounded flex items-center gap-1"><Check className="w-3 h-3" />Save</button>
             <button onClick={cancelEditing} className="px-3 py-1 bg-theme-tertiary text-theme-secondary text-xs rounded flex items-center gap-1"><X className="w-3 h-3" />Cancel</button>
@@ -2276,7 +2276,7 @@ Create a NEW version of this shot.` }],
 
                                   {editingShotField === `${shot.id}-description` ? (
                                     <div className="mb-2">
-                                      <textarea value={editingShotValue} onChange={e => setEditingShotValue(e.target.value)} className="w-full p-2 text-sm bg-theme-input border border-theme-primary rounded min-h-[60px] text-theme-primary" autoFocus />
+                                      <textarea dir="ltr" value={editingShotValue} onChange={e => setEditingShotValue(e.target.value)} className="w-full p-2 text-sm bg-theme-input border border-theme-primary rounded min-h-[60px] text-theme-primary" autoFocus />
                                       <div className="flex gap-1 mt-1">
                                         <button onClick={() => saveShotEdit(shot.id, 'description')} className="px-2 py-1 bg-green-500 text-white text-xs rounded flex items-center gap-1"><Check className="w-3 h-3" />Save</button>
                                         <button onClick={cancelShotEdit} className="px-2 py-1 bg-theme-tertiary text-theme-secondary text-xs rounded flex items-center gap-1"><X className="w-3 h-3" />Cancel</button>
@@ -2289,7 +2289,7 @@ Create a NEW version of this shot.` }],
                                   <div className="mt-2 space-y-2">
                                     {editingShotField === `${shot.id}-dialogue` ? (
                                       <div>
-                                        <textarea value={editingShotValue} onChange={e => setEditingShotValue(e.target.value)} className="w-full p-2 text-sm bg-theme-input border border-theme-primary rounded min-h-[40px] text-theme-primary" placeholder="CHARACTER: [emotion] 'Dialogue text'" autoFocus />
+                                        <textarea dir="ltr" value={editingShotValue} onChange={e => setEditingShotValue(e.target.value)} className="w-full p-2 text-sm bg-theme-input border border-theme-primary rounded min-h-[40px] text-theme-primary" placeholder="CHARACTER: [emotion] 'Dialogue text'" autoFocus />
                                         <div className="flex gap-1 mt-1">
                                           <button onClick={() => saveShotEdit(shot.id, 'dialogue')} className="px-2 py-1 bg-green-500 text-white text-xs rounded"><Check className="w-3 h-3" /></button>
                                           <button onClick={cancelShotEdit} className="px-2 py-1 bg-theme-tertiary text-theme-secondary text-xs rounded"><X className="w-3 h-3" /></button>
@@ -2303,7 +2303,7 @@ Create a NEW version of this shot.` }],
 
                                     {editingShotField === `${shot.id}-vo` ? (
                                       <div>
-                                        <textarea value={editingShotValue} onChange={e => setEditingShotValue(e.target.value)} className="w-full p-2 text-sm bg-theme-input border border-theme-primary rounded min-h-[40px] text-theme-primary" placeholder="[emotion] Narration text" autoFocus />
+                                        <textarea dir="ltr" value={editingShotValue} onChange={e => setEditingShotValue(e.target.value)} className="w-full p-2 text-sm bg-theme-input border border-theme-primary rounded min-h-[40px] text-theme-primary" placeholder="[emotion] Narration text" autoFocus />
                                         <div className="flex gap-1 mt-1">
                                           <button onClick={() => saveShotEdit(shot.id, 'vo')} className="px-2 py-1 bg-green-500 text-white text-xs rounded"><Check className="w-3 h-3" /></button>
                                           <button onClick={cancelShotEdit} className="px-2 py-1 bg-theme-tertiary text-theme-secondary text-xs rounded"><X className="w-3 h-3" /></button>
